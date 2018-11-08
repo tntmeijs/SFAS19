@@ -5,26 +5,33 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class SkateboardController : MonoBehaviour
 {
+    // //////////////////////////////////////////////////////////////////////////
     // Editor-exposed private member variables
+    // //////////////////////////////////////////////////////////////////////////
     [Header("=== PHYSICS CONFIGURATION ===")]
-    [SerializeField] private float m_HoverTargetHeight = 0.5f;
-    [SerializeField] private float m_ForwardPushStrength = 1000.0f;
-    [SerializeField] private float m_SteeringStrength = 1000.0f;
-    [SerializeField] private float m_UpwardsForceWhenColiding = 1000.0f;
-    [SerializeField] private float m_GravityForce = 1000.0f;
-    [SerializeField] private float m_DragWhileGrounded = 3.25f;
-    [SerializeField] private float m_DragWhileInAir = 0.125f;
-    [SerializeField] private float m_AngularDrag = 4.0f;
-    [SerializeField] private float m_Mass = 75.0f;
+    [SerializeField] private float m_HoverTargetHeight          = 0.5f;
+    [SerializeField] private float m_UpwardsForceWhenColiding   = 1000.0f;
+    [SerializeField] private float m_GravityForce               = 1000.0f;
+    [SerializeField] private float m_DragWhileGrounded          = 3.25f;
+    [SerializeField] private float m_DragWhileInAir             = 0.125f;
+    [SerializeField] private float m_AngularDrag                = 4.0f;
+    [SerializeField] private float m_Mass                       = 75.0f;
+
+    [SerializeField] private Vector3 m_ForwardAxisForAllWheels  = new Vector3(0.0f, 0.0f, 1.0f);
+    [SerializeField] private Vector3 m_VerticalAxisForAllWheels = new Vector3(0.0f, 1.0f, 0.0f);
+
     [SerializeField] private LayerMask m_SkateboardLayerMask = 0;
 
     [Header("=== OBJECT REFERENCES ===")]
     [SerializeField] private List<GameObject> m_Wheels = new List<GameObject>();
 
+    // //////////////////////////////////////////////////////////////////////////
     // Private member variables
+    // //////////////////////////////////////////////////////////////////////////
     private Rigidbody m_SkateboardBoardRigidbody = null;
-    private float m_SteeringValue = 0.0f;
-    private float m_ForwardPushValue = 0.0f;
+
+    private float m_SteeringValue       = 0.0f;
+    private float m_ForwardPushValue    = 0.0f;
 
     private void Awake()
     {
@@ -35,6 +42,29 @@ public class SkateboardController : MonoBehaviour
         m_SkateboardLayerMask = ~m_SkateboardLayerMask;
 
         CheckAndLogErrors();
+    }
+
+    private void ConfigureRigidbody()
+    {
+        // This function makes sure that the engine editor has no power over the rigidbody configuration.
+        // Because the systems should all be balanced delicately, the decision has been made to let this script
+        // be the only thing that can affect the state of the rigidbody component.
+        m_SkateboardBoardRigidbody.mass = m_Mass;
+        m_SkateboardBoardRigidbody.drag = m_DragWhileInAir;
+        m_SkateboardBoardRigidbody.angularDrag = m_AngularDrag;
+        m_SkateboardBoardRigidbody.useGravity = false;
+        m_SkateboardBoardRigidbody.isKinematic = false;
+        m_SkateboardBoardRigidbody.constraints = RigidbodyConstraints.None;
+        m_SkateboardBoardRigidbody.interpolation = RigidbodyInterpolation.None;
+        m_SkateboardBoardRigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+    }
+
+    private void CheckAndLogErrors()
+    {
+        if (m_Wheels.Count == 0)
+        {
+            Debug.LogError("FATAL ERROR: No wheel assigned to the skateboard!");
+        }
     }
 
     private void OnDrawGizmos()
@@ -90,57 +120,33 @@ public class SkateboardController : MonoBehaviour
             else
             {
                 m_SkateboardBoardRigidbody.drag = m_DragWhileInAir;
+
+                // It should be impossible to push the board forwards in mid-air
+                m_ForwardPushValue = 0.0f;
             }
 
             // Apply forward / backward movement
-            if (m_ForwardPushValue != 0.0f)
+            if (m_ForwardPushValue > 0.0f && boardGrounded)
             {
-                m_SkateboardBoardRigidbody.AddRelativeForce(wheel.transform.forward * m_ForwardPushValue * Time.fixedDeltaTime);
+                m_SkateboardBoardRigidbody.AddRelativeForce(m_ForwardAxisForAllWheels * m_ForwardPushValue * Time.fixedDeltaTime);
             }
 
             // Apply steering to the board
             if (m_SteeringValue != 0.0f)
             {
-                m_SkateboardBoardRigidbody.AddRelativeTorque(wheel.transform.up * m_SteeringValue * Time.fixedDeltaTime);
+                m_SkateboardBoardRigidbody.AddRelativeTorque(m_VerticalAxisForAllWheels * m_SteeringValue * Time.fixedDeltaTime);
             }
         }
     }
-
-    private void CheckAndLogErrors()
-    {
-        if (m_Wheels.Count == 0)
-        {
-            Debug.LogError("FATAL ERROR: No wheel assigned to the skateboard!");
-        }
-    }
-
-    private void ConfigureRigidbody()
-    {
-        // This function makes sure that the engine editor has no power over the rigidbody configuration.
-        // Because the systems should all be balanced delicately, the decision has been made to let this script
-        // be the only thing that can affect the state of the rigidbody component.
-        m_SkateboardBoardRigidbody.mass = m_Mass;
-        m_SkateboardBoardRigidbody.drag = m_DragWhileInAir;
-        m_SkateboardBoardRigidbody.angularDrag = m_AngularDrag;
-        m_SkateboardBoardRigidbody.useGravity = false;
-        m_SkateboardBoardRigidbody.isKinematic = false;
-        m_SkateboardBoardRigidbody.constraints = RigidbodyConstraints.None;
-        m_SkateboardBoardRigidbody.interpolation = RigidbodyInterpolation.None;
-        m_SkateboardBoardRigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
-    }
     
-    public void SteerLeft(float normalizedStrength)
+    // Negative values will steer to the left, while positive values will steer towards the right
+    public void SteerLeftRight(float steeringStrength)
     {
-        m_SteeringValue = m_SteeringStrength * normalizedStrength;
+        m_SteeringValue = steeringStrength;
     }
 
-    public void SteerRight(float normalizedStrength)
+    public void PushForward(float pushStrength)
     {
-        m_SteeringValue = m_SteeringStrength * normalizedStrength;
-    }
-
-    public void PushForward(float normalizedStrength)
-    {
-        m_ForwardPushValue = m_ForwardPushStrength * normalizedStrength;
+        m_ForwardPushValue = pushStrength;
     }
 }
