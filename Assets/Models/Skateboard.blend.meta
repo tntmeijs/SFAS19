@@ -24,12 +24,14 @@ ModelImporter:
     2300006: WheelFrontRight
     2300008: WheelRearLeft
     2300010: WheelRearRight
+    2300012: //RootNode
     3300000: Board
     3300002: Wheel
     3300004: WheelFrontLeft
     3300006: WheelFrontRight
     3300008: WheelRearLeft
     3300010: WheelRearRight
+    3300012: //RootNode
     4300000: Wheel
     4300002: Board
     4300004: WheelRearRight
