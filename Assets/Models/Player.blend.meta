@@ -27,6 +27,9 @@ ModelImporter:
     100042: Spine_Upper_target
     100044: Thigh_L
     100046: Thigh_R
+    100048: Hip_target
+    100050: Head_pose
+    100052: Spine_Upper_pose
     400000: Arm_L
     400002: Arm_R
     400004: Armature
@@ -51,7 +54,14 @@ ModelImporter:
     400042: Spine_Upper_target
     400044: Thigh_L
     400046: Thigh_R
+    400048: Hip_target
+    400050: Head_pose
+    400052: Spine_Upper_pose
     2100000: unnamed
+    2100002: Shirt
+    2100004: Skin
+    2100006: DarkLeather
+    2100008: Denim
     4300000: Humanoid
     7400000: Default Take
     9500000: //RootNode
