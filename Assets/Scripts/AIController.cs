@@ -93,8 +93,6 @@ public class AIController : MonoBehaviour
             m_PlayerController.AddForce((m_MovementDirection + new Vector3(0,2,0)) * 20.0f);
         }
 
-        Debug.Log(distance);
-
         // Update jumping input and apply gravity
         ApplyGravity();
 
