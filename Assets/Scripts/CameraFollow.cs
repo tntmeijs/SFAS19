@@ -12,6 +12,9 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private string m_NameMouseVerticalInputAxis = "Mouse Y";
 
     [Header("Camera arm references")]
+    [SerializeField] private Vector3 m_CameraArmRootOffset = new Vector3(0.0f, 0.0f, 0.0f);
+
+    [SerializeField] private Transform m_CameraArmRootTransform = null;
     [SerializeField] private Transform m_YawTransform = null;
     [SerializeField] private Transform m_PitchTransform = null;
 
@@ -68,6 +71,11 @@ public class CameraFollow : MonoBehaviour
 
     private bool CheckCameraArmReferencesForNull()
     {
+        if (!m_CameraArmRootTransform)
+        {
+            return false;
+        }
+
         if (!m_YawTransform)
         {
             return false;
@@ -93,13 +101,19 @@ public class CameraFollow : MonoBehaviour
 
 	private void Update ()
     {
+        MoveCameraArmRootToPlayerPosition();
         GatherMouseInputValues();
         ClampYaw();
         ClampPitch();
         ApplyYawToCameraArm();
         ApplyPitchToCameraArm();
     }
-    
+
+    private void MoveCameraArmRootToPlayerPosition()
+    {
+        m_CameraArmRootTransform.position = transform.position + m_CameraArmRootOffset;
+    }
+
     private void GatherMouseInputValues()
     {
         GetYawInput();

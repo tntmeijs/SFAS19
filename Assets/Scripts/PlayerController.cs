@@ -5,28 +5,28 @@ public class PlayerController : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    [Header("Configuration")]
     // The character's running speed
-    [SerializeField]
-    private float m_RunSpeed = 5.0f;
+    [SerializeField] private float m_RunSpeed = 5.0f;
 
     // The gravity strength
-    [SerializeField]
-    private float m_Gravity = 60.0f;
+    [SerializeField] private float m_Gravity = 60.0f;
 
     // The maximum speed the character can fall
-    [SerializeField]
-    private float m_MaxFallSpeed = 20.0f;
+    [SerializeField] private float m_MaxFallSpeed = 20.0f;
 
     // The character's jump height
-    [SerializeField]
-    private float m_JumpHeight = 4.0f;
+    [SerializeField] private float m_JumpHeight = 4.0f;
+
+    [Header("References")]
+    // Camera attached to the player (look in the prefab children)
+    [SerializeField] private Transform m_PlayerCameraTransform;
 
     // --------------------------------------------------------------
 
-    // The charactercontroller of the player
-    CharacterController m_CharacterController;
+    // The character controller of the player
+    private CharacterController m_CharacterController;
 
-    // The current movement direction in x & z.
     private Vector3 m_MovementDirection = Vector3.zero;
 
     // The current movement speed
@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        // If the player is dead update the respawn timer and exit update loop
+        // If the player is dead update the re-spawn timer and exit update loop
         if(!m_IsAlive)
         {
             UpdateRespawnTime();
@@ -114,9 +114,12 @@ public class PlayerController : MonoBehaviour
         // Update jumping input and apply gravity
         UpdateJumpState();
         ApplyGravity();
+        
+        // Movement direction relative to the orientation of the player transform
+        Vector3 relativeMovementDirection = transform.forward * m_MovementDirection.z + transform.right * m_MovementDirection.x;
 
         // Calculate actual motion
-        m_CurrentMovementOffset = (m_MovementDirection * m_MovementSpeed + m_Force  + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
+        m_CurrentMovementOffset = (relativeMovementDirection * m_MovementSpeed + m_Force  + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
 
         m_Force *= 0.95f;
 
@@ -127,28 +130,14 @@ public class PlayerController : MonoBehaviour
         RotateCharacterTowardsMouseCursor();
     }
 
-    private float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
-    {
-        return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
-    }
-
-    private void RotateCharacter(Vector3 movementDirection)
-    {
-        Quaternion lookRotation = Quaternion.LookRotation(movementDirection);
-        if (transform.rotation != lookRotation)
-        {
-            transform.rotation = lookRotation;
-        }
-    }
-
     private void RotateCharacterTowardsMouseCursor()
     {
-        Vector3 mousePosInScreenSpace = Input.mousePosition;
-        Vector3 playerPosInScreenSpace = Camera.main.WorldToScreenPoint(transform.position);
-        Vector3 directionInScreenSpace = mousePosInScreenSpace - playerPosInScreenSpace;
+        // Since the camera is used to aim, the character should always face in the same direction as the camera
+        // Transform.forward cannot be used since that would cause the player to rotate on more than just the Y axis.
+        Vector3 newPlayerForwardDirection = m_PlayerCameraTransform.forward;
+        newPlayerForwardDirection.y = 0.0f;
 
-        float angle = Mathf.Atan2(directionInScreenSpace.y, directionInScreenSpace.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(-angle + 90.0f, Vector3.up);
+        transform.LookAt(transform.position + newPlayerForwardDirection);
     }
 
     public void Die()
