@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     // --------------------------------------------------------------
 
     [Header("Configuration")]
+    [SerializeField] private float m_CharacterWalkingSpeed = 2.5f;
     [SerializeField] private float m_CharacterRunningSpeed = 5.0f;
     [SerializeField] private float m_GravityStrength = 60.0f;
     [SerializeField] private float m_MaxFallSpeedOfCharacter = 20.0f;
@@ -78,7 +79,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Update movement input
-        UpdateMovementState();
+        GatherInput();
 
         // Update jumping input and apply gravity
         UpdateJumpState();
@@ -114,14 +115,21 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
     }
 
-    private void UpdateMovementState()
+    private void GatherInput()
     {
-        // Get Player's movement input and determine direction and set run speed
+        // Movement directions
         float horizontalInput = Input.GetAxisRaw("Horizontal_P1");
         float verticalInput = Input.GetAxisRaw("Vertical_P1");
-
         m_MovementInputXZ = new Vector3(horizontalInput, 0, verticalInput);
-        m_CurrentMovementSpeed = m_CharacterRunningSpeed;
+
+        // Movement speed
+        bool shouldRun = Input.GetButton("Sprint");
+        SetMovementSpeed(shouldRun);
+    }
+
+    private void SetMovementSpeed(bool shouldRun)
+    {
+        m_CurrentMovementSpeed = shouldRun ? m_CharacterRunningSpeed : m_CharacterWalkingSpeed;
     }
 
     private void UpdateJumpState()
