@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
+    // --------------------------------------------------------------
+
     [Header("Input settings")]
     [SerializeField] private string m_NameMouseHorizontalInputAxis = "Mouse X";
     [SerializeField] private string m_NameMouseVerticalInputAxis = "Mouse Y";
@@ -32,8 +34,12 @@ public class CameraFollow : MonoBehaviour
     [Range(1.0f, 100.0f)]
     [SerializeField] private float m_PitchSensitivity = 1.0f;
 
+    // --------------------------------------------------------------
+
     private float m_MouseX = 0.0f;
     private float m_MouseY = 0.0f;
+
+    // --------------------------------------------------------------
 
     private void Awake()
     {
