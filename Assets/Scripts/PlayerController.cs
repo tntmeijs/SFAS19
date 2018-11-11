@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.AngleAxis(-angle + 90.0f, Vector3.up);
     }
 
-    private public void Die()
+    public void Die()
     {
         m_IsAlive = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
@@ -173,7 +173,7 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
     }
 
-    private public void AddForce(Vector3 force)
+    public void AddForce(Vector3 force)
     {
         m_Force += force;
     }
