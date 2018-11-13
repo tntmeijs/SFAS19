@@ -39,8 +39,7 @@ public class CameraFollow : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private float m_MouseX = 0.0f;
-    private float m_MouseY = 0.0f;
+    private Vector2 m_MouseInputValues = Vector2.zero;
 
     // --------------------------------------------------------------
 
@@ -57,18 +56,18 @@ public class CameraFollow : MonoBehaviour
         }
     }
 
-    private void ScalePitchClampValuesToSensitivity()
-    {
-        m_LowestPitchAngle /= m_PitchSensitivity;
-        m_HighestPitchAngle /= m_PitchSensitivity;
-    }
-
     private void HideCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
+    private void ScalePitchClampValuesToSensitivity()
+    {
+        m_LowestPitchAngle /= m_PitchSensitivity;
+        m_HighestPitchAngle /= m_PitchSensitivity;
+    }
+    
     private bool CheckCameraArmReferencesForNull()
     {
         if (!m_CameraArmRootTransform)
@@ -99,12 +98,12 @@ public class CameraFollow : MonoBehaviour
         Debug.LogError("FATAL ERROR: " + message);
     }
 
-	private void Update ()
+    private void Update ()
     {
         MoveCameraArmRootToPlayerPosition();
         GatherMouseInputValues();
-        ClampYaw();
-        ClampPitch();
+        ClampMouseInputYawValue();
+        ClampMouseInputPitchValue();
         ApplyYawToCameraArm();
         ApplyPitchToCameraArm();
     }
@@ -124,11 +123,11 @@ public class CameraFollow : MonoBehaviour
     {
         if (m_InvertYaw)
         {
-            m_MouseX += Input.GetAxis(m_NameMouseHorizontalInputAxis) * Time.deltaTime;
+            m_MouseInputValues.x += Input.GetAxis(m_NameMouseHorizontalInputAxis) * Time.deltaTime;
         }
         else
         {
-            m_MouseX -= Input.GetAxis(m_NameMouseHorizontalInputAxis) * Time.deltaTime;
+            m_MouseInputValues.x -= Input.GetAxis(m_NameMouseHorizontalInputAxis) * Time.deltaTime;
         }
     }
 
@@ -136,38 +135,38 @@ public class CameraFollow : MonoBehaviour
     {
         if (m_InvertPitch)
         {
-            m_MouseY += Input.GetAxis(m_NameMouseVerticalInputAxis) * Time.deltaTime;
+            m_MouseInputValues.y += Input.GetAxis(m_NameMouseVerticalInputAxis) * Time.deltaTime;
         }
         else
         {
-            m_MouseY -= Input.GetAxis(m_NameMouseVerticalInputAxis) * Time.deltaTime;
+            m_MouseInputValues.y -= Input.GetAxis(m_NameMouseVerticalInputAxis) * Time.deltaTime;
         }
     }
 
-    private void ClampYaw()
+    private void ClampMouseInputYawValue()
     {
-        if (m_MouseX > 360.0f)
+        if (m_MouseInputValues.x > 360.0f)
         {
-            m_MouseX -= 360.0f;
+            m_MouseInputValues.x -= 360.0f;
         }
-        else if (m_MouseX < 0.0f)
+        else if (m_MouseInputValues.x < 0.0f)
         {
-            m_MouseX += 360.0f;
+            m_MouseInputValues.x += 360.0f;
         }
     }
 
-    private void ClampPitch()
+    private void ClampMouseInputPitchValue()
     {
-        m_MouseY = Mathf.Clamp(m_MouseY, m_LowestPitchAngle, m_HighestPitchAngle);
+        m_MouseInputValues.y = Mathf.Clamp(m_MouseInputValues.y, m_LowestPitchAngle, m_HighestPitchAngle);
     }
 
     private void ApplyYawToCameraArm()
     {
-        m_YawTransform.localRotation = Quaternion.Euler(0.0f, m_MouseX * m_YawSensitivity, 0.0f);
+        m_YawTransform.localRotation = Quaternion.Euler(0.0f, m_MouseInputValues.x * m_YawSensitivity, 0.0f);
     }
 
     private void ApplyPitchToCameraArm()
     {
-        m_PitchTransform.localRotation = Quaternion.Euler(m_MouseY * m_PitchSensitivity, 0.0f, 0.0f);
+        m_PitchTransform.localRotation = Quaternion.Euler(m_MouseInputValues.y * m_PitchSensitivity, 0.0f, 0.0f);
     }
 }
