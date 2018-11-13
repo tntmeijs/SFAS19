@@ -6,3 +6,8 @@ For full details of the project please see your project brief.
 
 Contact: dan@gradsingames.com 
 
+# Third-party resources
+
+- Snow surface texture by [Downdate](https://opengameart.org/users/downdate)
+- Snow ground grass texture by [Heath Rezabek (Aqaraza)](https://opengameart.org/users/aqaraza)
+
