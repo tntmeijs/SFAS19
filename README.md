@@ -10,4 +10,3 @@ Contact: dan@gradsingames.com
 
 - Snow surface texture by [Downdate](https://opengameart.org/users/downdate)
 - Snow ground grass texture by [Heath Rezabek (Aqaraza)](https://opengameart.org/users/aqaraza)
-
