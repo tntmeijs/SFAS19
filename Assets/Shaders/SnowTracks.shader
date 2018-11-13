@@ -56,16 +56,18 @@
 			struct Input
 			{
 				float2 uv_SnowSurfaceTexture;
+				float2 uv_SnowGroundTexture;
+				float2 uv_DisplacementTexture;
 			};
 
 			void surface_shader_main(Input IN, inout SurfaceOutput o)
 			{
 				// The base color is used to give the snow a custom color
 				half4 snowSurfaceColor = tex2D(_SnowSurfaceTexture, IN.uv_SnowSurfaceTexture) * _SnowSurfaceBaseColor;
-				half4 snowGroundColor = tex2D(_SnowGroundTexture, IN.uv_SnowSurfaceTexture) * _SnowGroundBaseColor;
+				half4 snowGroundColor = tex2D(_SnowGroundTexture, IN.uv_SnowGroundTexture) * _SnowGroundBaseColor;
 
 				// Current depth of the snow layer
-				float displacementAmount = tex2D(_DisplacementTexture, IN.uv_SnowSurfaceTexture);
+				float displacementAmount = tex2D(_DisplacementTexture, IN.uv_DisplacementTexture);
 
 				// The ground and surface textures should blend based on the depth between the two
 				half4 combinedTextureColor = lerp(snowSurfaceColor, snowGroundColor, displacementAmount);
