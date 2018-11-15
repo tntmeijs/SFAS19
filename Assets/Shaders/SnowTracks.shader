@@ -1,7 +1,7 @@
 ﻿Shader "Tahar/SnowTracks" {
 	Properties{
-		_TessellationFactor("Tessellation", Range(1,16)) = 4
-		_DisplacementStrength("Displacement", Range(0, 1.0)) = 0.3
+		_TessellationFactor("Tessellation", Range(1.0, 16.0)) = 4
+		_DisplacementStrength("Displacement", Range(0.0, 1.0)) = 0.3
 
 		_SnowSurfaceTexture("Surface texture on top of the snow", 2D) = "white" {}
 		_SnowGroundTexture("Surface texture underneath the snow", 2D) = "white" {}

@@ -77,9 +77,9 @@ public class PlaneMeshGenerator : MonoBehaviour
         
         m_MeshFilter.mesh = newMesh;
 
-        // Adding the box collider here will force Unity to calculate the bounding box, which is convenient
-        Destroy(GetComponent<BoxCollider>());   // Remove it to be sure
-        gameObject.AddComponent<BoxCollider>(); // Add it again
+        // Adding the mesh collider here will force Unity to calculate the bounding box, which is convenient
+        Destroy(GetComponent<MeshCollider>());   // Remove it to be sure
+        gameObject.AddComponent<MeshCollider>(); // Add it again
     }
 
     // Since the mesh is invisible in the editor, a box is used to indicate the mesh bounds
