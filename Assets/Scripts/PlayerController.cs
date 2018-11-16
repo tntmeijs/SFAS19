@@ -13,10 +13,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_MaxFallSpeedOfCharacter = 20.0f;
     [SerializeField] private float m_JumpHeight = 4.0f;
 
-    [Header("References")]
-    // This transform is used to orient the player to the forward vector of the camera (arm)
-    [SerializeField] private Transform m_PlayerCameraArmYawTransform;
-
     // --------------------------------------------------------------
 
     private CharacterController m_CharacterController;
@@ -28,6 +24,8 @@ public class PlayerController : MonoBehaviour
     // This will be used to re-spawn the player at that location after a death.
     // TODO: Create a proper re-spawning system so this stuff can be removed.
     private Vector3 m_PlayerStartingPosition = Vector3.zero;
+
+    private Vector3 m_AimPoint = Vector3.zero;
 
     private float m_CurrentMovementSpeed = 0.0f;
 
@@ -54,6 +52,11 @@ public class PlayerController : MonoBehaviour
     public void AddForce(Vector3 force)
     {
         m_Force += force;
+    }
+
+    public void SetAimPoint(Vector3 newAimPoint)
+    {
+        m_AimPoint = newAimPoint;
     }
 
     // --------------------------------------------------------------
@@ -85,12 +88,11 @@ public class PlayerController : MonoBehaviour
         UpdateJumpState();
         ApplyGravity();
 
-        // Move the player relative to the camera
-        Vector3 relativeMovementDirection = CalculateCameraRelativeMovementDirection();
-        ApplyCharacterMotion(relativeMovementDirection);
+        // Move the player relative to the world
+        ApplyCharacterMotion(m_MovementInputXZ);
         
-        // Rotate the character towards the camera forward direction
-        RotateCharacterTowardsMouseCursor();
+        // Rotate the character towards the target
+        RotateCharacterInTargetDirection();
     }
 
     private void UpdateRespawnTime()
@@ -156,11 +158,6 @@ public class PlayerController : MonoBehaviour
         m_VerticalSpeed = Mathf.Min(m_VerticalSpeed, m_MaxFallSpeedOfCharacter);
     }
 
-    private Vector3 CalculateCameraRelativeMovementDirection()
-    {
-        return transform.forward * m_MovementInputXZ.z + transform.right * m_MovementInputXZ.x;
-    }
-
     private void ApplyCharacterMotion(Vector3 relativeMovementDirection)
     {
         // Calculate actual motion
@@ -172,13 +169,12 @@ public class PlayerController : MonoBehaviour
         m_CharacterController.Move(m_CurrentMovementOffset);
     }
 
-    private void RotateCharacterTowardsMouseCursor()
+    private void RotateCharacterInTargetDirection()
     {
-        // Since the camera is used to aim, the character should always face in the same direction as the camera
-        // Transform.forward cannot be used since that would cause the player to rotate on more than just the Y axis.
-        Vector3 newPlayerForwardDirection = m_PlayerCameraArmYawTransform.forward;
-        newPlayerForwardDirection.y = 0.0f;
+        // The player should never aim upward or downwards, so the Y component has to be the same when calculating
+        // the aim direction.
+        Vector3 aimPointWithoutY = new Vector3(m_AimPoint.x, transform.position.y, m_AimPoint.z);
 
-        transform.LookAt(transform.position + newPlayerForwardDirection);
+        transform.forward = aimPointWithoutY - transform.position;
     }
 }
