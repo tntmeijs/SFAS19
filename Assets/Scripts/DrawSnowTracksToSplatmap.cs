@@ -50,9 +50,4 @@ public class DrawSnowTracksToSplatmap : MonoBehaviour
             RenderTexture.ReleaseTemporary(tempTex);
         }
     }
-
-    private void OnGUI()
-    {
-        GUI.DrawTexture(new Rect(10, 10, 128, 128), m_SplatmapTexture, ScaleMode.ScaleToFit, false, 1.0f);
-    }
 }
