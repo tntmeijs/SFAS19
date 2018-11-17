@@ -5,7 +5,7 @@
 
 		_SnowSurfaceTexture("Surface texture on top of the snow", 2D) = "white" {}
 		_SnowGroundTexture("Surface texture underneath the snow", 2D) = "white" {}
-		_DisplacementTexture("Disp Texture", 2D) = "red" {}
+		_DisplacementTexture("Displacement Texture", 2D) = "red" {}
 
 		_SnowSurfaceBaseColor("Base color of the snow surface", color) = (1.0, 1.0, 1.0, 1.0)
 		_SnowGroundBaseColor("Base color of the ground underneath the snow", color) = (1.0, 1.0, 1.0, 1.0)

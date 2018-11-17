@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosiveBulletLogic : BulletLogic
+public class ExplosiveBulletLogic : SnowballLogic
 {
     // The Explosion ParticleEmitter Prefab
     [SerializeField]
