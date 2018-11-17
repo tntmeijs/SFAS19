@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletLogic : MonoBehaviour
+public class SnowballLogic : MonoBehaviour
 {
     // The lifetime of the bullet
     [SerializeField]
     float m_BulletLifeTime = 2.0f;
+
+    [SerializeField] private LayerMask m_GroundLayer = 0;
 
     // The speed of the bullet
     [SerializeField]
@@ -22,7 +24,7 @@ public class BulletLogic : MonoBehaviour
     void Start()
     {
         // Add velocity to the bullet
-        GetComponent<Rigidbody>().velocity = -transform.up * m_BulletSpeed;
+        GetComponent<Rigidbody>().velocity = transform.forward * m_BulletSpeed;
     }
 
     // Update is called once per frame
@@ -37,7 +39,13 @@ public class BulletLogic : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(!m_Active)
+        // The layermask returns a value, but this does not give the index as seen in the editor. To convert from an
+        // integer value to the bit offset, the following calculation can be used: Log(layerValue, 2).
+        int groundLayerMaskValueConverted = (int)Mathf.Log(m_GroundLayer.value, 2.0f);
+
+        // Do nothing if the snowball is no longer alive, or if it hits the ground, it should just roll on the ground
+        if(!m_Active ||
+            collision.gameObject.layer == groundLayerMaskValueConverted)
         {
             return;
         }
