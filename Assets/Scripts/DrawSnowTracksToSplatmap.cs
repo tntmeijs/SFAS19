@@ -22,13 +22,21 @@ public class DrawSnowTracksToSplatmap : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    private static bool m_SplatmapClearedOnce = false;
+
+    // --------------------------------------------------------------
+
     private void Awake()
     {
         m_DrawShaderMaterial = new Material(m_DrawShader);
         m_DrawShaderMaterial.SetFloat("_BrushSize", m_SnowTrackSize);
 
-        Graphics.SetRenderTarget(m_SplatmapTexture);
-        GL.Clear(false, true, Color.black);
+        if (!m_SplatmapClearedOnce)
+        {
+            Graphics.SetRenderTarget(m_SplatmapTexture);
+            GL.Clear(false, true, Color.black);
+            m_SplatmapClearedOnce = true;
+        }
     }
 
     private void Update()
