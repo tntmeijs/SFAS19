@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
         UpdateDashState();
 
         // Move the player relative to the world
-        ApplyCharacterMotion(m_MovementInputXZ);
+        ApplyCharacterMotion();
         
         // Rotate the character towards the target
         RotateCharacterInTargetDirection();
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
         // Movement directions
         float horizontalInput = Input.GetAxisRaw("Horizontal_P1");
         float verticalInput = Input.GetAxisRaw("Vertical_P1");
-        m_MovementInputXZ = new Vector3(horizontalInput, 0, verticalInput);
+        m_MovementInputXZ = new Vector3(horizontalInput, 0, verticalInput).normalized;
 
         // Movement speed
         SetMovementSpeed();
@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetButtonDown("Dash") && m_AllowDash)
         {
-            m_Force = m_MovementInputXZ.normalized * m_DashForceMultiplier;
+            m_Force = m_MovementInputXZ * m_DashForceMultiplier;
 
             m_AllowDash = false;
 
@@ -180,10 +180,10 @@ public class PlayerController : MonoBehaviour
         m_AllowDash = true;
     }
 
-    private void ApplyCharacterMotion(Vector3 relativeMovementDirection)
+    private void ApplyCharacterMotion()
     {
         // Calculate actual motion
-        Vector3 m_CurrentMovementOffset = (relativeMovementDirection * m_CurrentMovementSpeed + m_Force + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
+        Vector3 m_CurrentMovementOffset = (m_MovementInputXZ * m_CurrentMovementSpeed + m_Force + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
 
         m_Force *= 0.95f;
 
