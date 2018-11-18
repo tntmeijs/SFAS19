@@ -26,14 +26,6 @@ public class DrawSnowTracksToSplatmap : MonoBehaviour
     private RenderTexture m_SplatmapTexture = null;
 
     // --------------------------------------------------------------
-    
-    // This function can be used to set the reference to the snow mesh when instantiating objects such as snowballs
-    public void SetSnowMesh(GameObject snowMesh)
-    {
-        m_SnowMesh = snowMesh;
-    }
-    
-    // --------------------------------------------------------------
 
     // This function can be used to set the reference to the snow mesh when instantiating objects such as snowballs
     public void SetSnowMesh(GameObject snowMesh)
