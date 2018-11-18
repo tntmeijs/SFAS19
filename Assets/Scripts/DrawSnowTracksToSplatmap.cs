@@ -35,6 +35,14 @@ public class DrawSnowTracksToSplatmap : MonoBehaviour
     
     // --------------------------------------------------------------
 
+    // This function can be used to set the reference to the snow mesh when instantiating objects such as snowballs
+    public void SetSnowMesh(GameObject snowMesh)
+    {
+        m_SnowMesh = snowMesh;
+    }
+
+    // --------------------------------------------------------------
+
     private void Start()
     {
         m_DrawShaderMaterial = new Material(m_DrawShader);
@@ -62,7 +70,7 @@ public class DrawSnowTracksToSplatmap : MonoBehaviour
 
             // Grab A, apply shader, save in temp
             Graphics.Blit(m_SplatmapTexture, tempTex, m_DrawShaderMaterial);
-            
+
             // Copy temp to B
             Graphics.Blit(tempTex, m_SplatmapTexture);
 
