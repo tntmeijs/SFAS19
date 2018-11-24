@@ -6,12 +6,16 @@ public class PlayerController : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    [Header("References")]
+    [SerializeField] private InputManager m_InputManager = null;
+
     [Header("Configuration")]
     [SerializeField] private float m_CharacterWalkingSpeed = 2.5f;
-    [SerializeField] private float m_CharacterRunningSpeed = 5.0f;
     [SerializeField] private float m_GravityStrength = 60.0f;
     [SerializeField] private float m_MaxFallSpeedOfCharacter = 20.0f;
     [SerializeField] private float m_JumpHeight = 4.0f;
+    [SerializeField] private float m_DashForceMultiplier = 12.5f;
+    [SerializeField] private float m_DashCooldownTime = 2.0f;
 
     // --------------------------------------------------------------
 
@@ -33,6 +37,7 @@ public class PlayerController : MonoBehaviour
     private float m_VerticalSpeed = 0.0f;
     
     private bool m_IsAlive = true;
+    private bool m_AllowDash = true;
 
     // The time it takes to re-spawn
     private const float MAX_RESPAWN_TIME = 1.0f;
@@ -64,11 +69,97 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         m_CharacterController = GetComponent<CharacterController>();
+
+        bool allReferencesSetCorrectly = false;
+        CheckReferencesForNull(out allReferencesSetCorrectly);
+
+        if (!allReferencesSetCorrectly)
+        {
+            Debug.LogError("FATAL ERROR: Not all references have been set correctly!");
+        }
     }
 
     private void Start()
     {
         m_PlayerStartingPosition = transform.position;
+
+        // Hook up movement to the input manager
+        m_InputManager.OnPlayerForwardInput     += InputForward;
+        m_InputManager.OnPlayerBackwardInput    += InputBackward;
+        m_InputManager.OnPlayerLeftInput        += InputLeft;
+        m_InputManager.OnPlayerRightInput       += InputRight;
+        
+        // Hook up actions to the input manager (except for throwing)
+        m_InputManager.OnPlayerDashInput    += InputDash;
+        m_InputManager.OnPlayerJumpInput    += InputJump;
+    }
+
+    private void InputForward()
+    {
+        m_MovementInputXZ.z += 1.0f;
+    }
+
+    private void InputBackward()
+    {
+        m_MovementInputXZ.z += -1.0f;
+    }
+
+    private void InputLeft()
+    {
+        m_MovementInputXZ.x += -1.0f;
+    }
+
+    private void InputRight()
+    {
+        m_MovementInputXZ.x += 1.0f;
+    }
+
+    private void InputDash()
+    {
+        if (m_AllowDash)
+        {
+            Dash();
+        }
+    }
+
+    private void Dash()
+    {
+        m_Force = m_MovementInputXZ.normalized * m_DashForceMultiplier;
+
+        m_AllowDash = false;
+
+        // Dash cooldown timer
+        StartCoroutine(ApplyDashCooldown());
+    }
+
+    private IEnumerator ApplyDashCooldown()
+    {
+        yield return new WaitForSeconds(m_DashCooldownTime);
+        m_AllowDash = true;
+    }
+
+    private void InputJump()
+    {
+        // Character can only jump when standing on the ground
+        if (m_CharacterController.isGrounded)
+        {
+            Jump();
+        }
+    }
+
+    private void Jump()
+    {
+        m_VerticalSpeed = Mathf.Sqrt(m_JumpHeight * m_GravityStrength);
+    }
+
+    private void CheckReferencesForNull(out bool status)
+    {
+        status = true;
+
+        if (!m_InputManager)
+        {
+            status = false;
+        }
     }
  
     // Update is called once per frame
@@ -84,15 +175,18 @@ public class PlayerController : MonoBehaviour
         // Update movement input
         GatherInput();
 
-        // Update jumping input and apply gravity
-        UpdateJumpState();
+        // Apply gravity
         ApplyGravity();
 
         // Move the player relative to the world
-        ApplyCharacterMotion(m_MovementInputXZ);
+        ApplyCharacterMotion();
         
         // Rotate the character towards the target
         RotateCharacterInTargetDirection();
+
+        // At the end of each frame, the input should reset to prevent the
+        // player from moving non-stop
+        m_MovementInputXZ = Vector3.zero;
     }
 
     private void UpdateRespawnTime()
@@ -119,33 +213,13 @@ public class PlayerController : MonoBehaviour
 
     private void GatherInput()
     {
-        // Movement directions
-        float horizontalInput = Input.GetAxisRaw("Horizontal_P1");
-        float verticalInput = Input.GetAxisRaw("Vertical_P1");
-        m_MovementInputXZ = new Vector3(horizontalInput, 0, verticalInput);
-
         // Movement speed
-        bool shouldRun = Input.GetButton("Sprint");
-        SetMovementSpeed(shouldRun);
+        SetMovementSpeed();
     }
 
-    private void SetMovementSpeed(bool shouldRun)
+    private void SetMovementSpeed()
     {
-        m_CurrentMovementSpeed = shouldRun ? m_CharacterRunningSpeed : m_CharacterWalkingSpeed;
-    }
-
-    private void UpdateJumpState()
-    {
-        // Character can jump when standing on the ground
-        if (Input.GetButtonDown("Jump_P1") && m_CharacterController.isGrounded)
-        {
-            Jump();
-        }
-    }
-
-    private void Jump()
-    {
-        m_VerticalSpeed = Mathf.Sqrt(m_JumpHeight * m_GravityStrength);
+        m_CurrentMovementSpeed = m_CharacterWalkingSpeed;
     }
 
     private void ApplyGravity()
@@ -158,10 +232,10 @@ public class PlayerController : MonoBehaviour
         m_VerticalSpeed = Mathf.Min(m_VerticalSpeed, m_MaxFallSpeedOfCharacter);
     }
 
-    private void ApplyCharacterMotion(Vector3 relativeMovementDirection)
+    private void ApplyCharacterMotion()
     {
         // Calculate actual motion
-        Vector3 m_CurrentMovementOffset = (relativeMovementDirection * m_CurrentMovementSpeed + m_Force + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
+        Vector3 m_CurrentMovementOffset = (m_MovementInputXZ.normalized * m_CurrentMovementSpeed + m_Force + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
 
         m_Force *= 0.95f;
 
