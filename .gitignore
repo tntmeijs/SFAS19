@@ -5,6 +5,12 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 
+# Blender backup files
+*.blend1
+
+# Blender backup files Unity meta data
+*.blend1.meta
+
 # Visual Studio cache directory
 .vs/
 
