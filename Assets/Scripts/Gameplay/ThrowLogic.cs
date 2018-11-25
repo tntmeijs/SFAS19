@@ -13,6 +13,9 @@ public class ThrowLogic : MonoBehaviour
     [Header("Configuration")]
     [SerializeField] private float m_ThrowCooldown = 0.5f;
 
+    [SerializeField] private int m_SnowBallCost = 10;
+    [SerializeField] private int m_MaximumSnowToCarry = 50;
+
     [Header("References")]
     // This reference is needed to assign the snow mesh to the snowball (for the snow track rendering)
     [SerializeField] private GameObject m_SnowMesh = null;
@@ -25,7 +28,7 @@ public class ThrowLogic : MonoBehaviour
     // --------------------------------------------------------------
 
     // Snow gathered by grabbing it from piles of snow
-    private float m_SnowAmount = 0.0f;
+    private int m_SnowAmount = 0;
 
     // Determines whether the player is allowed to throw a snowball
     private bool m_CanThrow = true;
@@ -66,6 +69,7 @@ public class ThrowLogic : MonoBehaviour
         {
             ThrowSnowBall();
             m_CanThrow = false;
+            m_SnowAmount = Mathf.Clamp(m_SnowAmount - m_SnowBallCost, 0, m_MaximumSnowToCarry);
 
             StartCoroutine(ApplyThrowCooldown());
         }
