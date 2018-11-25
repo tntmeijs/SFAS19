@@ -15,6 +15,7 @@ public class DrawSnowTracksToSplatmap : MonoBehaviour
 
     [Range(0.1f, 10.0f)]
     [SerializeField] private float m_SnowtrackRayLength = 3.0f;
+    [SerializeField] private Color m_ShowtrackRayColor = Color.yellow;
 
     [Range(0.0f, 0.25f)]
     [SerializeField] private float m_SnowTrackSize = 0.01f;
@@ -68,5 +69,12 @@ public class DrawSnowTracksToSplatmap : MonoBehaviour
 
             RenderTexture.ReleaseTemporary(tempTex);
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // Visualize the ray that is used to collide with the snow mesh
+        Gizmos.color = m_ShowtrackRayColor;
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3.down * m_SnowtrackRayLength));
     }
 }
