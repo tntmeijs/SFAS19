@@ -13,6 +13,9 @@ public class ThrowLogic : MonoBehaviour
     [Header("Configuration")]
     [SerializeField] private float m_ThrowCooldown = 0.5f;
 
+    [SerializeField] private int m_SnowBallCost = 10;
+    [SerializeField] private int m_MaximumSnowToCarry = 50;
+
     [Header("References")]
     // This reference is needed to assign the snow mesh to the snowball (for the snow track rendering)
     [SerializeField] private GameObject m_SnowMesh = null;
@@ -20,10 +23,12 @@ public class ThrowLogic : MonoBehaviour
 
     [SerializeField] private Transform m_SnowballSpawnPoint = null;
 
+    [SerializeField] private InputManager m_InputManager = null;
+
     // --------------------------------------------------------------
 
     // Snow gathered by grabbing it from piles of snow
-    private float m_SnowAmount = 0.0f;
+    private int m_SnowAmount = 0;
 
     // Determines whether the player is allowed to throw a snowball
     private bool m_CanThrow = true;
@@ -42,42 +47,46 @@ public class ThrowLogic : MonoBehaviour
         CheckReferencesForNull();
     }
 
+    private void Start()
+    {
+        m_InputManager.OnPlayerThrowInput += InputThrow;
+    }
+
     private void CheckReferencesForNull()
     {
-        if (!m_SnowballPrefab ||
-            !m_SnowballSpawnPoint ||
-            !m_SnowMesh)
+        if (!m_SnowballPrefab       ||
+            !m_SnowballSpawnPoint   ||
+            !m_SnowMesh             ||
+            !m_InputManager)
         {
             Debug.LogError("ERROR: One or more references in the throw logic script have not been set properly!");
         }
     }
 
-    private void Update ()
+    private void InputThrow()
     {
-        if (m_CanThrow)
+        if (m_CanThrow && m_SnowAmount > 0.0f)
         {
-            if(Input.GetButtonDown("Fire1") && m_SnowAmount > 0)
-            {
-                Fire();
-                m_CanThrow = false;
+            ThrowSnowBall();
+            m_CanThrow = false;
+            m_SnowAmount = Mathf.Clamp(m_SnowAmount - m_SnowBallCost, 0, m_MaximumSnowToCarry);
 
-                StartCoroutine(ApplyThrowCooldown());
-            }
+            StartCoroutine(ApplyThrowCooldown());
         }
     }
 
-    private IEnumerator ApplyThrowCooldown()
-    {
-        yield return new WaitForSeconds(m_ThrowCooldown);
-        m_CanThrow = true;
-    }
-
-    private void Fire()
+    private void ThrowSnowBall()
     {
         // Create the snowball from the snowball prefab
         GameObject snowball = Instantiate(m_SnowballPrefab, m_SnowballSpawnPoint.position, transform.rotation * m_SnowballPrefab.transform.rotation);
 
         // This reference has to be set to make the snow track rendering work
         snowball.GetComponent<DrawSnowTracksToSplatmap>().SetSnowMesh(m_SnowMesh);
+    }
+
+    private IEnumerator ApplyThrowCooldown()
+    {
+        yield return new WaitForSeconds(m_ThrowCooldown);
+        m_CanThrow = true;
     }
 }
