@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 // Even though the standard Unity3D plane mesh works well for the snow deformation tessellation shader, it lacks
 // details once the plane is scaled. Therefore, it is recommended to make use of this class instead.
@@ -9,6 +10,11 @@ using UnityEngine;
 public class PlaneMeshGenerator : MonoBehaviour
 {
     // --------------------------------------------------------------
+
+    [Header("References")]
+    // The navmesh needs to be generated at runtime, because the plane does not exist in the editor,
+    // it only exists after this script has finished execution
+    [SerializeField] private NavMeshSurface m_NavMeshSurface = null;
 
     [Header("Configuration")]
     // Not that important, but the user can choose to rename the "procedural" mesh
@@ -34,10 +40,24 @@ public class PlaneMeshGenerator : MonoBehaviour
 
     private void Awake()
     {
+        LogErrorIfReferencesAreMissing();
+
         m_MeshFilter = GetComponent<MeshFilter>();
 
         // Start generating the new plane mesh using the properties set by the user
         GenerateMesh();
+
+        // The navmesh can only be generated after the plane has been generated, as it
+        // needs the plane data to create its own mesh
+        GenerateNavMesh();
+    }
+
+    private void LogErrorIfReferencesAreMissing()
+    {
+        if (m_NavMeshSurface == null)
+        {
+            Debug.LogError("FATAL ERROR: One or more references have not been set correctly!");
+        }
     }
 
     private void GenerateMesh()
@@ -145,6 +165,11 @@ public class PlaneMeshGenerator : MonoBehaviour
         // a lot of programming work. A mesh collider is required, because it is the only type of collider that gives
         // the raycast hit information some UV data once an intersection has been found.
         gameObject.AddComponent<MeshCollider>();
+    }
+
+    private void GenerateNavMesh()
+    {
+        m_NavMeshSurface.BuildNavMesh();
     }
 
     // Since the mesh is invisible in the editor, a box is used to indicate the mesh bounds
