@@ -34,6 +34,11 @@ ModelImporter:
     100056: Neck
     100058: Shoulder_L
     100060: Shoulder_R
+    100062: Foot_L_Target
+    100064: Foot_R_Target
+    100066: Hand_L_Target
+    100068: Hand_R_Target
+    100070: Neck_Target
     400000: //RootNode
     400002: Body
     400004: Eyes
@@ -65,6 +70,11 @@ ModelImporter:
     400056: Neck
     400058: Shoulder_L
     400060: Shoulder_R
+    400062: Foot_L_Target
+    400064: Foot_R_Target
+    400066: Hand_L_Target
+    400068: Hand_R_Target
+    400070: Neck_Target
     2100000: Skin
     2100002: Shirt
     2100004: Jeans
@@ -83,6 +93,8 @@ ModelImporter:
     4300004: Body
     7400000: Default Take
     9500000: //RootNode
+    13700000: Body
+    13700002: Eyes
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
