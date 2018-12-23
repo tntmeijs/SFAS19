@@ -17,9 +17,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_DashForceMultiplier = 12.5f;
     [SerializeField] private float m_DashCooldownTime = 2.0f;
 
+    [Header("Animation")]
+    [SerializeField] private string m_WalkFlagName = "IsWalking";
+
     // --------------------------------------------------------------
 
     private CharacterController m_CharacterController;
+    private Animator m_AnimationController;
+    private ThrowLogic m_ThrowScript;
 
     // Stores the vertical and horizontal input values
     private Vector3 m_MovementInputXZ = Vector3.zero;
@@ -30,8 +35,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 m_PlayerStartingPosition = Vector3.zero;
 
     private Vector3 m_AimPoint = Vector3.zero;
-
-    private float m_CurrentMovementSpeed = 0.0f;
 
     // The current vertical / falling speed
     private float m_VerticalSpeed = 0.0f;
@@ -45,6 +48,16 @@ public class PlayerController : MonoBehaviour
 
     // The force added to the player (used for knock backs)
     private Vector3 m_Force = Vector3.zero;
+
+    private enum PlayerState
+    {
+        Invalid = -1,
+        Idle,
+        Walking,
+        TotalStateCount
+    };
+
+    private PlayerState m_CurrentState = PlayerState.Idle;
 
     // --------------------------------------------------------------
 
@@ -69,6 +82,8 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         m_CharacterController = GetComponent<CharacterController>();
+        m_AnimationController = GetComponent<Animator>();
+        m_ThrowScript = GetComponent<ThrowLogic>();
 
         bool allReferencesSetCorrectly = false;
         CheckReferencesForNull(out allReferencesSetCorrectly);
@@ -156,7 +171,9 @@ public class PlayerController : MonoBehaviour
     {
         status = true;
 
-        if (!m_InputManager)
+        if (!m_InputManager ||
+            !m_AnimationController ||
+            !m_ThrowScript)
         {
             status = false;
         }
@@ -172,8 +189,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // Update movement input
-        GatherInput();
+        // Determine the current state of the player state machine
+        UpdatePlayerState();
+
+        // Play the correct animation
+        UpdateAnimationStateMachine();
 
         // Apply gravity
         ApplyGravity();
@@ -211,15 +231,32 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
     }
 
-    private void GatherInput()
+    private void UpdatePlayerState()
     {
-        // Movement speed
-        SetMovementSpeed();
+        // The default state is the idle state
+        m_CurrentState = PlayerState.Idle;
+
+        // If the movement vector has a size greater than zero, the character is moving
+        if (m_MovementInputXZ.magnitude > 0)
+        {
+            m_CurrentState = PlayerState.Walking;
+        }
     }
 
-    private void SetMovementSpeed()
+    private void UpdateAnimationStateMachine()
     {
-        m_CurrentMovementSpeed = m_CharacterWalkingSpeed;
+        switch (m_CurrentState)
+        {
+            case PlayerState.Idle:
+                // Not walking will start the idle animation automatically
+                m_AnimationController.SetBool(m_WalkFlagName, false);
+                break;
+
+            case PlayerState.Walking:
+                // Switch over the the walk animation
+                m_AnimationController.SetBool(m_WalkFlagName, true);
+                break;
+        }
     }
 
     private void ApplyGravity()
@@ -235,7 +272,7 @@ public class PlayerController : MonoBehaviour
     private void ApplyCharacterMotion()
     {
         // Calculate actual motion
-        Vector3 m_CurrentMovementOffset = (m_MovementInputXZ.normalized * m_CurrentMovementSpeed + m_Force + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
+        Vector3 m_CurrentMovementOffset = (m_MovementInputXZ.normalized * m_CharacterWalkingSpeed + m_Force + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
 
         m_Force *= 0.95f;
 
