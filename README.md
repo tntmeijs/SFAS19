@@ -6,3 +6,10 @@ For full details of the project please see your project brief.
 
 Contact: dan@gradsingames.com 
 
+---
+
+Credits:
+
+- Race cars by [Kenney](https://kenney.nl).
+- Mini golf by [Kenney](https://kenney.nl).
+
