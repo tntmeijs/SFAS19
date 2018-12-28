@@ -6,8 +6,11 @@ For full details of the project please see your project brief.
 
 Contact: dan@gradsingames.com 
 
-# Third-party resources
+---
 
-- Snow surface texture by [Downdate](https://opengameart.org/users/downdate)
-- Snow ground texture by [Calinou](https://opengameart.org/users/calinou)
+Credits:
+
+- Race cars by [Kenney](https://kenney.nl).
+- Mini golf by [Kenney](https://kenney.nl).
+- UI by [Kenney](https://kenney.nl).
 
