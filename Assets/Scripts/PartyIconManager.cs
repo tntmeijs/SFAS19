@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// The purpose of this script is to interpret the data sent by the party manager and modify the icons on the main menu
+/// accordingly.
+/// </summary>
 public class PartyIconManager : MonoBehaviour
 {
     // --------------------------------------------------------------

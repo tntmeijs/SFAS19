@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The party manager is a class that takes care of the main menu set-up. This is what allows players to join a party
+/// or leave it. It does not handle the assignment of controllers, however, it is responsible for polling all input from
+/// the system. This class heavily relies on the controller manager.
+/// </summary>
 public class PartyManager : MonoBehaviour
 {
     // --------------------------------------------------------------

@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// This class handles the assignment and reassignment of controllers. It is not aware of any Unity-specific concepts.
+/// Instead, it is basically a fancy list manager that keep track of the players in the party and which index they have
+/// to use to get their input from the system.
+/// </summary>
 public class ControllerManager
 {
     // --------------------------------------------------------------
