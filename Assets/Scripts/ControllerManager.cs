@@ -5,8 +5,6 @@ public class ControllerManager
 {
     // --------------------------------------------------------------
 
-    private const int MAXIMUM_NUMBER_OF_PLAYERS = 4;
-
     // Maps the controller to the player index
     // List[0] --> player 1
     // List[1] --> player 2
@@ -43,7 +41,7 @@ public class ControllerManager
     public void Initialize()
     {
         // Allocate enough memory for all players
-        m_RegisteredControllersIndices = new List<int>(MAXIMUM_NUMBER_OF_PLAYERS);
+        m_RegisteredControllersIndices = new List<int>(Settings.MAXIMUM_NUMBER_OF_PLAYERS);
 
         FillControllerSpots();
     }
@@ -58,11 +56,11 @@ public class ControllerManager
     public void AddGameController(Controllers type)
     {
         // The controller that is being added exceeds the maximum number of players allowed, no need to continue
-        if (m_RegisteredControllersIndices.Count > MAXIMUM_NUMBER_OF_PLAYERS)
+        if (m_RegisteredControllersIndices.Count > Settings.MAXIMUM_NUMBER_OF_PLAYERS)
             return;
 
         // Register the controller index
-        for (int playerIndex = 0; playerIndex < MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
+        for (int playerIndex = 0; playerIndex < Settings.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
         {
             if (m_RegisteredControllersIndices[playerIndex] == (int)type)
             {
@@ -99,7 +97,7 @@ public class ControllerManager
         if (m_RegisteredControllersIndices.Count < 1)
             return;
 
-        for (int playerIndex = 0; playerIndex < MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
+        for (int playerIndex = 0; playerIndex < Settings.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
         {
             // Found the controller that needs to be removed
             if (m_RegisteredControllersIndices[playerIndex] == (int)type)
@@ -134,7 +132,7 @@ public class ControllerManager
     private void FillControllerSpots()
     {
         // Set each controller slot to no controller at all
-        for (int controller = 0; controller < MAXIMUM_NUMBER_OF_PLAYERS; ++controller)
+        for (int controller = 0; controller < Settings.MAXIMUM_NUMBER_OF_PLAYERS; ++controller)
         {
             m_RegisteredControllersIndices.Add((int)Controllers.None);
         }
