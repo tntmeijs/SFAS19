@@ -21,23 +21,40 @@ public class PartyIconManager : MonoBehaviour
     [SerializeField]
     private Player m_PlayerNumber = Player.PlayerOne;
 
-    [Header("Player type icon")]
-    // Game-object that holds the image component for AI
+    // Color of the join button
     [SerializeField]
-    private GameObject m_ComputerPlayerIcon;
+    private Color m_JoinIconColor = Color.green;
 
-    // Game-object that holds the image component for humans
+    // Color of the leave button
     [SerializeField]
-    private GameObject m_HumanPlayerIcon;
+    private Color m_LeaveIconColor = Color.red;
 
+    [Header("Sprites")]
+    // AI icon
+    [SerializeField]
+    private Sprite m_ComputerIcon;
+
+    // Player icon
+    [SerializeField]
+    private Sprite m_HumanIcon;
+
+    // Join icon
+    [SerializeField]
+    private Sprite m_JoinIcon;
+
+    // Leave icon
+    [SerializeField]
+    private Sprite m_LeaveIcon;
+
+    [Header("Icon containers")]
+    // Image that holds the player icon
+    [SerializeField]
+    private Image m_ProfileImage;
+    
     [Header("Join / leave icons")]
-    // Button to join the party
+    // Image that holds the button icons
     [SerializeField]
-    private GameObject m_JoinButton;
-
-    // Button to leave the party
-    [SerializeField]
-    private GameObject m_LeaveButton;
+    private Image m_JoinLeaveImage;
 
     [Header("References")]
     // Object that holds the party manager script
@@ -61,10 +78,12 @@ public class PartyIconManager : MonoBehaviour
 
     private void CheckIfReferencesAreSet()
     {
-        if (!m_ComputerPlayerIcon   ||
-            !m_HumanPlayerIcon      ||
-            !m_JoinButton           ||
-            !m_LeaveButton          ||
+        if (!m_ProfileImage     ||
+            !m_JoinLeaveImage   ||
+            !m_ComputerIcon     ||
+            !m_HumanIcon        ||
+            !m_JoinIcon         ||
+            !m_LeaveIcon        ||
             !m_PartyManager)
         {
             Debug.LogError("CRITICAL ERROR: Not all references have been set!");
@@ -106,28 +125,26 @@ public class PartyIconManager : MonoBehaviour
     private void SetPlayerAsAI()
     {
         // Show the AI icon
-        m_ComputerPlayerIcon.SetActive(true);
-        m_HumanPlayerIcon.SetActive(false);
+        m_ProfileImage.sprite = m_ComputerIcon;
     }
 
     private void SetPlayerAsHuman()
     {
         // Show the human icon
-        m_ComputerPlayerIcon.SetActive(false);
-        m_HumanPlayerIcon.SetActive(true);
+        m_ProfileImage.sprite = m_HumanIcon;
     }
 
     private void SetButtonJoin()
     {
         // Show the join button
-        m_JoinButton.SetActive(true);
-        m_LeaveButton.SetActive(false);
+        m_JoinLeaveImage.sprite = m_JoinIcon;
+        m_JoinLeaveImage.color = m_JoinIconColor;
     }
 
     private void SetButtonLeave()
     {
         // Show the leave button
-        m_JoinButton.SetActive(false);
-        m_LeaveButton.SetActive(true);
+        m_JoinLeaveImage.sprite = m_LeaveIcon;
+        m_JoinLeaveImage.color = m_LeaveIconColor;
     }
 }
