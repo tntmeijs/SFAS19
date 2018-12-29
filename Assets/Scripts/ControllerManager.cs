@@ -59,7 +59,6 @@ public class ControllerManager
         if (m_RegisteredControllersIndices.Count > Settings.MAXIMUM_NUMBER_OF_PLAYERS)
             return;
 
-        // Register the controller index
         for (int playerIndex = 0; playerIndex < Settings.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
         {
             if (m_RegisteredControllersIndices[playerIndex] == (int)type)
@@ -67,7 +66,11 @@ public class ControllerManager
                 // This controller exists already, no need to continue
                 return;
             }
+        }
 
+        // Register the controller index
+        for (int playerIndex = 0; playerIndex < Settings.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
+        {
             if (m_RegisteredControllersIndices[playerIndex] == (int)Controllers.None)
             {
                 m_RegisteredControllersIndices[playerIndex] = (int)type;
