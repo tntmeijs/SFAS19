@@ -54,6 +54,13 @@ public class PartyManager : MonoBehaviour
     private KeyCode m_JoystickFourLeaveCode;
 
     // --------------------------------------------------------------
+    
+    public ControllerManager GetControllerManager()
+    {
+        return m_ControllerManager;
+    }
+
+    // --------------------------------------------------------------
 
     private void Awake()
     {
