@@ -134,6 +134,13 @@ public class ControllerManager
         return m_RegisteredControllersIndices;
     }
 
+    // Request controller of a player
+    // index --> 0, 1, 2, 3
+    public Controllers GetControllerTypeForPlayerWithIndex(int index)
+    {
+        return (Controllers)m_RegisteredControllersIndices[index];
+    }
+
     // --------------------------------------------------------------
 
     // Fill the list with empty controllers
