@@ -10,17 +10,13 @@ public class PartyManager : MonoBehaviour
     // This mapping assumes an XboxOne controller
     private enum JoystickButton
     {
-        Invalid = -1,
-
         A, B, X, Y,
 
         LeftBumper,
         RightBumper,
 
-        View,
-        Menu,
-
-        TotalNumberOfButtons
+        View,   // Called "back" on Xbox360
+        Menu,   // Called "start" on Xbox360
     }
 
     // Join as a human using the keyboard
@@ -43,46 +39,52 @@ public class PartyManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private const int MAXIMUM_NUMBER_OF_PLAYERS = 4;
+    // Manages all controllers
+    private ControllerManager m_ControllerManager = new ControllerManager();
 
-    // Maps the controller to the player index
-    // List[0] --> player 1
-    // List[1] --> player 2
-    // List[2] --> player 3
-    // List[3] --> player 4
-    private List<int> m_RegisteredControllersIndices;
+    // Buttons that will be polled each frame
+    private KeyCode m_JoystickOneJoinCode;
+    private KeyCode m_JoystickTwoJoinCode;
+    private KeyCode m_JoystickThreeJoinCode;
+    private KeyCode m_JoystickFourJoinCode;
 
-    // A keyboard is considered a controller as well!
-    private enum Controllers
-    {
-        None = -1,
-
-        Keyboard,   // 0
-        Joystick1,  // 1
-        Joystick2,  // 2
-        Joystick3,  // 3
-        Joystick4,  // 4
-
-        TotalNumberOfControllers
-    }
+    private KeyCode m_JoystickOneLeaveCode;
+    private KeyCode m_JoystickTwoLeaveCode;
+    private KeyCode m_JoystickThreeLeaveCode;
+    private KeyCode m_JoystickFourLeaveCode;
 
     // --------------------------------------------------------------
 
     private void Awake()
     {
-        FillControllerSpots();
+        m_ControllerManager.Initialize();
+        SaveCustomKeyCodesAsUnityKeyCodes();
     }
 
-    private void FillControllerSpots()
+    private void SaveCustomKeyCodesAsUnityKeyCodes()
     {
-        // Allocate enough memory for all players
-        m_RegisteredControllersIndices = new List<int>(MAXIMUM_NUMBER_OF_PLAYERS);
+        // To make the inspector easy to use, a custom joystick button enumeration is used.
+        // This does, however, mean that Unity is no longer able to interpret those buttons directory.
+        // Therefore, the utility function below has to be used. This converts the custom button enumeration into the
+        // Unity enumeration.
+        m_JoystickOneJoinCode       = ConvertJoystickButtonToKeycode(ControllerManager.Controllers.Joystick1, m_JoystickJoinButton);
+        m_JoystickTwoJoinCode       = ConvertJoystickButtonToKeycode(ControllerManager.Controllers.Joystick2, m_JoystickJoinButton);
+        m_JoystickThreeJoinCode     = ConvertJoystickButtonToKeycode(ControllerManager.Controllers.Joystick3, m_JoystickJoinButton);
+        m_JoystickFourJoinCode      = ConvertJoystickButtonToKeycode(ControllerManager.Controllers.Joystick4, m_JoystickJoinButton);
 
-        // Set each controller slot to no controller at all
-        for (int index = 0; index < MAXIMUM_NUMBER_OF_PLAYERS; ++index)
-        {
-            m_RegisteredControllersIndices.Add((int) Controllers.None);
-        }
+        m_JoystickOneLeaveCode      = ConvertJoystickButtonToKeycode(ControllerManager.Controllers.Joystick1, m_JoystickLeaveButton);
+        m_JoystickTwoLeaveCode      = ConvertJoystickButtonToKeycode(ControllerManager.Controllers.Joystick2, m_JoystickLeaveButton);
+        m_JoystickThreeLeaveCode    = ConvertJoystickButtonToKeycode(ControllerManager.Controllers.Joystick3, m_JoystickLeaveButton);
+        m_JoystickFourLeaveCode     = ConvertJoystickButtonToKeycode(ControllerManager.Controllers.Joystick4, m_JoystickLeaveButton);
+    }
+
+    private KeyCode ConvertJoystickButtonToKeycode(ControllerManager.Controllers joystickID, JoystickButton button)
+    {
+        // Convert to one of the key code enum values (it is safe to assume that the Unity enumeration names will never
+        // change. This is why the hard-coded values are justified. If, for some reason, these value change in the future,
+        // please expose them to the inspector. However, they have been the same for the last few years, so there is no
+        // real reason to assume that this will change anytime soon.
+        return (KeyCode)Enum.Parse(typeof(KeyCode), "Joystick" + (int)joystickID + "Button" + (int)button);
     }
 
     private void Update()
@@ -100,57 +102,31 @@ public class PartyManager : MonoBehaviour
         // Keyboard
         if (Input.GetKeyDown(m_KeyboardJoinButton))
         {
-            AddGameController(Controllers.Keyboard);
+            m_ControllerManager.AddGameController(ControllerManager.Controllers.Keyboard);
         }
 
         // Joystick 1
-        if (Input.GetKeyDown(ConvertJoystickButtonToKeycode((int)Controllers.Joystick1, m_JoystickJoinButton)))
+        if (Input.GetKeyDown(m_JoystickOneJoinCode))
         {
-            AddGameController(Controllers.Joystick1);
+            m_ControllerManager.AddGameController(ControllerManager.Controllers.Joystick1);
         }
 
         // Joystick 2
-        if (Input.GetKeyDown(ConvertJoystickButtonToKeycode((int)Controllers.Joystick2, m_JoystickJoinButton)))
+        if (Input.GetKeyDown(m_JoystickTwoJoinCode))
         {
-            AddGameController(Controllers.Joystick2);
+            m_ControllerManager.AddGameController(ControllerManager.Controllers.Joystick2);
         }
 
         // Joystick 3
-        if (Input.GetKeyDown(ConvertJoystickButtonToKeycode((int)Controllers.Joystick3, m_JoystickJoinButton)))
+        if (Input.GetKeyDown(m_JoystickThreeJoinCode))
         {
-            AddGameController(Controllers.Joystick3);
+            m_ControllerManager.AddGameController(ControllerManager.Controllers.Joystick3);
         }
 
         // Joystick 4
-        if (Input.GetKeyDown(ConvertJoystickButtonToKeycode((int)Controllers.Joystick4, m_JoystickJoinButton)))
+        if (Input.GetKeyDown(m_JoystickFourJoinCode))
         {
-            AddGameController(Controllers.Joystick4);
-        }
-    }
-
-    private void AddGameController(Controllers type)
-    {
-        // The controller that is being added exceeds the maximum number of players allowed, no need to continue
-        if (m_RegisteredControllersIndices.Count > MAXIMUM_NUMBER_OF_PLAYERS)
-            return;
-
-        for (int controllerIndex = 0; controllerIndex < MAXIMUM_NUMBER_OF_PLAYERS; ++controllerIndex)
-        {
-            if (m_RegisteredControllersIndices[controllerIndex] == (int)type)
-            {
-                // This controller exists already, no need to continue
-                return;
-            }
-        }
-
-        // Register the controller index
-        for (int controllerIndex = 0; controllerIndex < MAXIMUM_NUMBER_OF_PLAYERS; ++controllerIndex)
-        {
-            if (m_RegisteredControllersIndices[controllerIndex] == (int)Controllers.None)
-            {
-                m_RegisteredControllersIndices[controllerIndex] = (int)type;
-                break;  // Only set one controller, if the others are invalid, leave them for the next controller
-            }
+            m_ControllerManager.AddGameController(ControllerManager.Controllers.Joystick4);
         }
     }
 
@@ -159,52 +135,31 @@ public class PartyManager : MonoBehaviour
         // Keyboard
         if (Input.GetKeyDown(m_KeyboardLeaveButton))
         {
-            RemoveGameController(Controllers.Keyboard);
+            m_ControllerManager.RemoveGameController(ControllerManager.Controllers.Keyboard);
         }
 
         // Joystick 1
-        if (Input.GetKeyDown(ConvertJoystickButtonToKeycode((int)Controllers.Joystick1, m_JoystickLeaveButton)))
+        if (Input.GetKeyDown(m_JoystickOneLeaveCode))
         {
-            RemoveGameController(Controllers.Joystick1);
+            m_ControllerManager.RemoveGameController(ControllerManager.Controllers.Joystick1);
         }
 
         // Joystick 2
-        if (Input.GetKeyDown(ConvertJoystickButtonToKeycode((int)Controllers.Joystick2, m_JoystickLeaveButton)))
+        if (Input.GetKeyDown(m_JoystickTwoLeaveCode))
         {
-            RemoveGameController(Controllers.Joystick2);
+            m_ControllerManager.RemoveGameController(ControllerManager.Controllers.Joystick2);
         }
 
         // Joystick 3
-        if (Input.GetKeyDown(ConvertJoystickButtonToKeycode((int)Controllers.Joystick3, m_JoystickLeaveButton)))
+        if (Input.GetKeyDown(m_JoystickThreeLeaveCode))
         {
-            RemoveGameController(Controllers.Joystick3);
+            m_ControllerManager.RemoveGameController(ControllerManager.Controllers.Joystick3);
         }
 
         // Joystick 4
-        if (Input.GetKeyDown(ConvertJoystickButtonToKeycode((int)Controllers.Joystick4, m_JoystickLeaveButton)))
+        if (Input.GetKeyDown(m_JoystickFourLeaveCode))
         {
-            RemoveGameController(Controllers.Joystick4);
+            m_ControllerManager.RemoveGameController(ControllerManager.Controllers.Joystick4);
         }
-    }
-
-    private void RemoveGameController(Controllers type)
-    {
-        // No more controllers left to unregister
-        if (m_RegisteredControllersIndices.Count < 1)
-            return;
-
-        for (int controllerIndex = 0; controllerIndex < MAXIMUM_NUMBER_OF_PLAYERS; ++controllerIndex)
-        {
-            if (m_RegisteredControllersIndices[controllerIndex] == (int)type)
-            {
-                m_RegisteredControllersIndices[controllerIndex] = (int)Controllers.None;
-            }
-        }
-    }
-
-    private KeyCode ConvertJoystickButtonToKeycode(int joystickID, JoystickButton button)
-    {
-        // Convert to one of the key code enum values
-        return (KeyCode)Enum.Parse(typeof(KeyCode), "Joystick" + joystickID + "Button" + (int)button);
     }
 }
