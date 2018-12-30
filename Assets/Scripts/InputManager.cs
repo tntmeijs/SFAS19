@@ -13,16 +13,22 @@ public class InputManager : MonoBehaviour
     // Key bindings for keyboard players
     [Header("Keyboard bindings")]
     [SerializeField]
-    private KeyCode m_KeyboardThrottle = KeyCode.W;
+    private KeyCode m_KeyboardThrottle = KeyCode.LeftShift;
 
     [SerializeField]
-    private KeyCode m_KeyboardBrake = KeyCode.S;
+    private KeyCode m_KeyboardBrake = KeyCode.LeftControl;
 
     [SerializeField]
     private KeyCode m_KeyboardSteerLeft = KeyCode.A;
 
     [SerializeField]
     private KeyCode m_KeyboardSteerRight = KeyCode.D;
+
+    [SerializeField]
+    private KeyCode m_KeyboardUp = KeyCode.W;
+
+    [SerializeField]
+    private KeyCode m_KeyboardDown = KeyCode.S;
 
     [SerializeField]
     private KeyCode m_KeyboardActivatePowerUp = KeyCode.Space;
@@ -37,6 +43,9 @@ public class InputManager : MonoBehaviour
 
     [SerializeField]
     private Global.JoystickAxis m_JoystickSteer = Global.JoystickAxis.LeftStickHorizontal;
+
+    [SerializeField]
+    private Global.JoystickAxis m_JoystickUpDown = Global.JoystickAxis.LeftStickVertical;
 
     [SerializeField]
     private Global.JoystickButton m_JoystickActivatePowerUp = Global.JoystickButton.RightBumper;
@@ -91,6 +100,9 @@ public class InputManager : MonoBehaviour
         Global.PlayerInputData inputData = new Global.PlayerInputData();
         Global.Controllers controller = m_PlayerControllers[(int)player];
 
+        // Save the type of controller
+        inputData.controller = controller;
+
         // This player slot has not controller assigned to it
         if (controller == Global.Controllers.None)
             return inputData;
@@ -139,25 +151,30 @@ public class InputManager : MonoBehaviour
     
     private void HandleKeyboardInput(ref Global.PlayerInputData data)
     {
-        data.throttle = PollButton(m_KeyboardThrottle);
-        data.braking = PollButton(m_KeyboardBrake);
-        data.activatedPowerUp = PollButton(m_KeyboardActivatePowerUp);
+        data.buttonA = PollButton(m_KeyboardThrottle);
+        data.buttonB = PollButton(m_KeyboardBrake);
+        data.buttonRightBumper = PollButton(m_KeyboardActivatePowerUp);
 
         bool steerLeft = PollButton(m_KeyboardSteerLeft);
         bool steerRight = PollButton(m_KeyboardSteerRight);
 
+        bool up = PollButton(m_KeyboardUp);
+        bool down = PollButton(m_KeyboardDown);
+
         // Since the keyboard input is not based on axes, the individual inputs have to be combined into a single
         // floating-point value for the steering value.
-        data.steeringValue = ConvertBooleansToAxisValue(steerLeft, steerRight);
+        data.axisLeftStickHorizontal = ConvertBooleansToAxisValue(steerLeft, steerRight);
+        data.axisLeftStickVertical = ConvertBooleansToAxisValue(down, up);
     }
 
     private void HandleJoystickInput(ref Global.PlayerInputData data, Global.Controllers joystick)
     {
-        data.throttle = PollButton(Global.ConvertJoystickButtonToKeycode(joystick, m_JoystickThrottle));
-        data.braking = PollButton(Global.ConvertJoystickButtonToKeycode(joystick, m_JoystickBrake));
-        data.activatedPowerUp = PollButton(Global.ConvertJoystickButtonToKeycode(joystick, m_JoystickActivatePowerUp));
+        data.buttonA = PollButton(Global.ConvertJoystickButtonToKeycode(joystick, m_JoystickThrottle));
+        data.buttonB = PollButton(Global.ConvertJoystickButtonToKeycode(joystick, m_JoystickBrake));
+        data.buttonRightBumper = PollButton(Global.ConvertJoystickButtonToKeycode(joystick, m_JoystickActivatePowerUp));
 
-        data.steeringValue = PollAxis(ConstructAxisNameFromCustomAxisTypeAndJoystick(joystick, m_JoystickSteer));
+        data.axisLeftStickHorizontal = PollAxis(ConstructAxisNameFromCustomAxisTypeAndJoystick(joystick, m_JoystickSteer));
+        data.axisLeftStickVertical = PollAxis(ConstructAxisNameFromCustomAxisTypeAndJoystick(joystick, m_JoystickUpDown));
     }
 
     private bool PollButton(KeyCode keyCode)

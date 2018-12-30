@@ -72,16 +72,13 @@ public static class Global
 
     public struct PlayerInputData
     {
-        // True when pressing the throttle button
-        public bool throttle;
+        public bool buttonA;
+        public bool buttonB;
+        public bool buttonRightBumper;
 
-        // True when pressing the brake button
-        public bool braking;
+        public float axisLeftStickHorizontal;
+        public float axisLeftStickVertical;
 
-        // Steering value clamped between -1.0f and 1.0f
-        public float steeringValue;
-
-        // True when the power-up should be fired (does not know whether the player has a power-up, just a dumb flag)
-        public bool activatedPowerUp;
+        public Controllers controller;
     };
 }
