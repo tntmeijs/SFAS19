@@ -18,21 +18,9 @@ public class ControllerManager
     private List<int> m_RegisteredControllersIndices;
 
     // --------------------------------------------------------------
-
-    // A keyboard is considered a controller as well
-    public enum Controllers
-    {
-        None = -1,
-
-        Keyboard,   // 0
-        Joystick1,  // 1
-        Joystick2,  // 2
-        Joystick3,  // 3
-        Joystick4,  // 4
-    }
-
-    // Used to create callbacks when players join / leave the game. Also passes the player index.
-    public delegate void PlayerJoinLeaveCallback(int index);
+    
+    // Used to create callbacks when players join / leave the game. Also passes the player "index".
+    public delegate void PlayerJoinLeaveCallback(Global.Player player);
 
     // Player joins the party
     public PlayerJoinLeaveCallback OnPlayerJoin;
@@ -46,7 +34,7 @@ public class ControllerManager
     public void Initialize()
     {
         // Allocate enough memory for all players
-        m_RegisteredControllersIndices = new List<int>(Settings.MAXIMUM_NUMBER_OF_PLAYERS);
+        m_RegisteredControllersIndices = new List<int>(Global.MAXIMUM_NUMBER_OF_PLAYERS);
 
         FillControllerSpots();
     }
@@ -58,13 +46,13 @@ public class ControllerManager
     }
 
     // Add a controller to the list
-    public void AddGameController(Controllers type)
+    public void AddGameController(Global.Controllers type)
     {
         // The controller that is being added exceeds the maximum number of players allowed, no need to continue
-        if (m_RegisteredControllersIndices.Count > Settings.MAXIMUM_NUMBER_OF_PLAYERS)
+        if (m_RegisteredControllersIndices.Count > Global.MAXIMUM_NUMBER_OF_PLAYERS)
             return;
 
-        for (int playerIndex = 0; playerIndex < Settings.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
+        for (int playerIndex = 0; playerIndex < Global.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
         {
             if (m_RegisteredControllersIndices[playerIndex] == (int)type)
             {
@@ -74,16 +62,16 @@ public class ControllerManager
         }
 
         // Register the controller index
-        for (int playerIndex = 0; playerIndex < Settings.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
+        for (int playerIndex = 0; playerIndex < Global.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
         {
-            if (m_RegisteredControllersIndices[playerIndex] == (int)Controllers.None)
+            if (m_RegisteredControllersIndices[playerIndex] == (int)Global.Controllers.None)
             {
                 m_RegisteredControllersIndices[playerIndex] = (int)type;
 
                 try
                 {
                     // Signal other scripts that a new player has joined
-                    OnPlayerJoin(playerIndex);
+                    OnPlayerJoin((Global.Player)playerIndex);
                 }
                 catch (NullReferenceException e)
                 {
@@ -99,24 +87,24 @@ public class ControllerManager
     }
 
     // Remove a controller from the list
-    public void RemoveGameController(Controllers type)
+    public void RemoveGameController(Global.Controllers type)
     {
         // No more controllers left to unregister
         if (m_RegisteredControllersIndices.Count < 1)
             return;
 
-        for (int playerIndex = 0; playerIndex < Settings.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
+        for (int playerIndex = 0; playerIndex < Global.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
         {
             // Found the controller that needs to be removed
             if (m_RegisteredControllersIndices[playerIndex] == (int)type)
             {
                 // Set the controller to "none" to remove it
-                m_RegisteredControllersIndices[playerIndex] = (int)Controllers.None;
+                m_RegisteredControllersIndices[playerIndex] = (int)Global.Controllers.None;
 
                 try
                 {
                     // Signal other scripts that a player has left
-                    OnPlayerLeave(playerIndex);
+                    OnPlayerLeave((Global.Player)playerIndex);
                 }
                 catch (NullReferenceException e)
                 {
@@ -136,9 +124,9 @@ public class ControllerManager
 
     // Request controller of a player
     // index --> 0, 1, 2, 3
-    public Controllers GetControllerTypeForPlayerWithIndex(int index)
+    public Global.Controllers GetControllerTypeForPlayerWithIndex(Global.Player player)
     {
-        return (Controllers)m_RegisteredControllersIndices[index];
+        return (Global.Controllers)m_RegisteredControllersIndices[(int)player];
     }
 
     // --------------------------------------------------------------
@@ -147,9 +135,9 @@ public class ControllerManager
     private void FillControllerSpots()
     {
         // Set each controller slot to no controller at all
-        for (int controller = 0; controller < Settings.MAXIMUM_NUMBER_OF_PLAYERS; ++controller)
+        for (int controller = 0; controller < Global.MAXIMUM_NUMBER_OF_PLAYERS; ++controller)
         {
-            m_RegisteredControllersIndices.Add((int)Controllers.None);
+            m_RegisteredControllersIndices.Add((int)Global.Controllers.None);
         }
     }
 }

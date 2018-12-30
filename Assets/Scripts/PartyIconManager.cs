@@ -11,19 +11,10 @@ public class PartyIconManager : MonoBehaviour
 {
     // --------------------------------------------------------------
     
-    // Fool-proof player number range
-    public enum Player
-    {
-        PlayerOne   = 0,
-        PlayerTwo   = 1,
-        PlayerThree = 2,
-        PlayerFour  = 3
-    }
-
     [Header("Configuration")]
     // To which player ID does this icon belong?
     [SerializeField]
-    private Player m_PlayerNumber = Player.PlayerOne;
+    private Global.Player m_PlayerNumber = Global.Player.PlayerOne;
 
     // Color of the join button
     [SerializeField]
@@ -75,7 +66,7 @@ public class PartyIconManager : MonoBehaviour
     private void Awake()
     {
         CheckIfReferencesAreSet();
-        PrepareCallbacks();
+        RegisterCallbacks();
         SetPlayerAsAI();
         SetButtonJoin();
     }
@@ -94,32 +85,28 @@ public class PartyIconManager : MonoBehaviour
         }
     }
 
-    private void PrepareCallbacks()
+    private void RegisterCallbacks()
     {
         ControllerManager controllerManager = m_PartyManager.GetControllerManager();
-        RegisterCallbacks(ref controllerManager);
-    }
 
-    private void RegisterCallbacks(ref ControllerManager controllerManager)
-    {
         controllerManager.OnPlayerJoin  += PlayerJoinedParty;
         controllerManager.OnPlayerLeave += PlayerLeftParty;
     }
 
-    private void PlayerJoinedParty(int playerID)
+    private void PlayerJoinedParty(Global.Player player)
     {
         // If the player that joined is represented by the object this script is attached to, show the human icon
-        if (playerID == (int)m_PlayerNumber)
+        if (player == m_PlayerNumber)
         {
             SetPlayerAsHuman();
             SetButtonLeave();
         }
     }
 
-    private void PlayerLeftParty(int playerID)
+    private void PlayerLeftParty(Global.Player player)
     {
         // If the player that left is represented by the object this script is attached to, show the computer icon
-        if (playerID == (int)m_PlayerNumber)
+        if (player == m_PlayerNumber)
         {
             SetPlayerAsAI();
             SetButtonJoin();
