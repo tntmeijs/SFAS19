@@ -11,7 +11,11 @@ using UnityEngine;
 public class PartyManager : MonoBehaviour
 {
     // --------------------------------------------------------------
-    
+
+    public static PartyManager instance = null;
+
+    // --------------------------------------------------------------
+
     // Join as a human using the keyboard
     [Header("Join game")]
     [SerializeField]
@@ -62,11 +66,26 @@ public class PartyManager : MonoBehaviour
 
     private void Awake()
     {
+        EnforceSingleton();
         CheckIfReferencesAreSet();
 
         m_ControllerManager.Initialize();
         SaveCustomKeyCodesAsUnityKeyCodes();
         SetControllerManagerCallbacks();
+    }
+
+    private void EnforceSingleton()
+    {
+        if (instance == null)
+        {
+            // No instance exists yet
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            // Instance exists already, destroy this new instance
+            Destroy(gameObject);
+        }
     }
 
     private void CheckIfReferencesAreSet()

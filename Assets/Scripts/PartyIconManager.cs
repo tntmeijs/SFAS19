@@ -58,11 +58,6 @@ public class PartyIconManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    // Protect against decrementing the player ID more than once
-    private bool m_FixedPlayerIDAlready = false;
-
-    // --------------------------------------------------------------
-
     private void Awake()
     {
         CheckIfReferencesAreSet();
