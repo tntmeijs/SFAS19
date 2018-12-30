@@ -1,16 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// The purpose of this class is to control the flow of the main menu. While the party manager and the party icon manager
 /// both control the main menu as well, this class actually control the flow of the menu. For example, loading the next
 /// scene, displaying options, switching between overlays, etc.
 /// </summary>
+[RequireComponent(typeof(Animator))]
 public class MainMenuManager : MonoBehaviour
 {
     // --------------------------------------------------------------
+
+    [Header("Configuration")]
+    [SerializeField]
+    private string m_AnimatorStartCountDownFlag = "CountingDown";
 
     [Header("References")]
     // Graphics ray caster module from the canvas
@@ -100,7 +107,24 @@ public class MainMenuManager : MonoBehaviour
     // Cursors
     private GameObject[] m_PlayerCursors = new GameObject[Global.MaximumNumberOfPlayers];
 
+    // Count-down animation
+    private Animator m_CountDownAnimation = null;
+
     // --------------------------------------------------------------
+
+    // The count-down animation calls this function
+    public void LoadNextScene()
+    {
+        // Move to the next scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    // --------------------------------------------------------------
+
+    private void Awake()
+    {
+        m_CountDownAnimation = GetComponent<Animator>();
+    }
 
     private void Start()
     {
@@ -221,6 +245,7 @@ public class MainMenuManager : MonoBehaviour
         UpdateCursorPositions();
         UpdatePlayerReadyArray();
         UpdatePlayerCounterText();
+        UpdateGameStartState();
     }
 
     private void UpdateCursorPositions()
@@ -314,5 +339,27 @@ public class MainMenuManager : MonoBehaviour
 
         // Construct and update the counter text box
         m_PlayerCounterText.text = m_PlayerCountPrefix + totalNumberOfPlayersReady + "/" + m_PlayersInParty + m_PlayerCountPostfix;
+    }
+
+    private void UpdateGameStartState()
+    {
+        int totalNumberOfPlayersReady = 0;
+
+        foreach (bool isReady in m_PlayersReady)
+        {
+            if (isReady)
+                ++totalNumberOfPlayersReady;
+        }
+
+        if (totalNumberOfPlayersReady == m_PlayersInParty)
+        {
+            // Start the countdown!
+            m_CountDownAnimation.SetBool(m_AnimatorStartCountDownFlag, true);
+        }
+        else
+        {
+            // Stop the countdown!
+            m_CountDownAnimation.SetBool(m_AnimatorStartCountDownFlag, false);
+        }
     }
 }
