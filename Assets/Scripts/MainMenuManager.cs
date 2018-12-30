@@ -351,7 +351,9 @@ public class MainMenuManager : MonoBehaviour
                 ++totalNumberOfPlayersReady;
         }
 
-        if (totalNumberOfPlayersReady == m_PlayersInParty)
+        // Only start the countdown is there is at least one person in the party
+        if (totalNumberOfPlayersReady == m_PlayersInParty &&
+            m_PlayersInParty > 0)
         {
             // Start the countdown!
             m_CountDownAnimation.SetBool(m_AnimatorStartCountDownFlag, true);
