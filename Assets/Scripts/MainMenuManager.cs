@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// The purpose of this class is to control the flow of the main menu. While the party manager and the party icon manager
@@ -11,6 +11,32 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     // --------------------------------------------------------------
+
+    [Header("References")]
+    // Graphics ray caster module from the canvas
+    [SerializeField]
+    private GraphicRaycaster m_CanvasGraphicRaycaster = null;
+
+    // Event system in the scene
+    [SerializeField]
+    private EventSystem m_SceneEventSystem = null;
+
+    [Header("Start bar")]
+    // Tag associated with the start bar
+    [SerializeField]
+    private string m_StartBarTag = "StartBar";
+
+    // Text that will be prefixed to the player counter
+    [SerializeField]
+    private string m_PlayerCountPrefix = "";
+
+    // Text that will be appended to the player counter
+    [SerializeField]
+    private string m_PlayerCountPostfix = " ready!";
+
+    // Text object that will be used to display the players that are ready
+    [SerializeField]
+    private Text m_PlayerCounterText = null;
 
     [Header("Main menu cursor container")]
     // Object that will act as the parent of the cursor objects
@@ -36,7 +62,7 @@ public class MainMenuManager : MonoBehaviour
 
     // Cursor icon
     [SerializeField]
-    private Sprite m_CursorIcon;
+    private Sprite m_CursorIcon = null;
 
     // Cursor icon dimensions
     [SerializeField]
@@ -52,7 +78,7 @@ public class MainMenuManager : MonoBehaviour
 
     // Cursor colors
     [SerializeField]
-    private Color[] m_PlayerCursorColors = new Color[Global.MAXIMUM_NUMBER_OF_PLAYERS];
+    private Color[] m_PlayerCursorColors = new Color[Global.MaximumNumberOfPlayers];
     
     // --------------------------------------------------------------
 
@@ -66,10 +92,13 @@ public class MainMenuManager : MonoBehaviour
     private int m_PlayersInParty = 0;
 
     // Which players should have their own cursor?
-    private bool[] m_PlayerHasCursor = new bool[Global.MAXIMUM_NUMBER_OF_PLAYERS];
+    private bool[] m_PlayerHasCursor = new bool[Global.MaximumNumberOfPlayers];
+
+    // Which players are ready to play the game?
+    private bool[] m_PlayersReady = new bool[Global.MaximumNumberOfPlayers];
 
     // Cursors
-    private GameObject[] m_PlayerCursors = new GameObject[Global.MAXIMUM_NUMBER_OF_PLAYERS];
+    private GameObject[] m_PlayerCursors = new GameObject[Global.MaximumNumberOfPlayers];
 
     // --------------------------------------------------------------
 
@@ -79,6 +108,7 @@ public class MainMenuManager : MonoBehaviour
         CheckIfReferencesAreSet();
         SetJoinLeaveCallbacks();
         CreateCursors();
+        UpdatePlayerCounterText();
     }
 
     private void SetSingletonReferences()
@@ -92,10 +122,13 @@ public class MainMenuManager : MonoBehaviour
 
     private void CheckIfReferencesAreSet()
     {
-        if (!m_InputManager         ||
-            !m_PartyManager         ||
-            !m_CursorIcon           ||
-            !m_CursorJoinAnimationPrefab  ||
+        if (!m_CanvasGraphicRaycaster       ||
+            !m_SceneEventSystem             ||
+            !m_PlayerCounterText            ||
+            !m_InputManager                 ||
+            !m_PartyManager                 ||
+            !m_CursorIcon                   ||
+            !m_CursorJoinAnimationPrefab    ||
             !m_CursorParent)
         {
             Debug.LogError("CRITICAL ERROR: Not all references have been set!");
@@ -121,6 +154,9 @@ public class MainMenuManager : MonoBehaviour
         --m_PlayersInParty;
 
         DisableCursor(player);
+
+        // Since the player left the party, he is no longer capable of being ready to play
+        m_PlayersReady[(int)player] = false;
     }
 
     // The cursor objects are empty game objects by default
@@ -182,6 +218,13 @@ public class MainMenuManager : MonoBehaviour
 
     private void Update()
     {
+        UpdateCursorPositions();
+        UpdatePlayerReadyArray();
+        UpdatePlayerCounterText();
+    }
+
+    private void UpdateCursorPositions()
+    {
         // Only update the cursors that are currently active
         for (int playerIndex = 0; playerIndex < m_PlayerHasCursor.Length; ++playerIndex)
         {
@@ -218,7 +261,58 @@ public class MainMenuManager : MonoBehaviour
             cursorMoveDelta *= (m_CursorSpeed * Time.deltaTime);
 
             // Update the position of the cursor
-           m_PlayerCursors[playerIndex].transform.localPosition += new Vector3(cursorMoveDelta.x, cursorMoveDelta.y, 0.0f);
+            m_PlayerCursors[playerIndex].transform.localPosition += new Vector3(cursorMoveDelta.x, cursorMoveDelta.y, 0.0f);
         }
+    }
+
+    private void UpdatePlayerReadyArray()
+    {
+        // New pointer event
+        PointerEventData pointerEvent = new PointerEventData(m_SceneEventSystem);
+
+        // Only check cursor events for active cursors
+        for (int playerIndex = 0; playerIndex < m_PlayerHasCursor.Length; ++playerIndex)
+        {
+            // The cursor is not active, no need to check it
+            if (!m_PlayerHasCursor[playerIndex])
+                continue;
+
+            // Player is not ready by default
+            m_PlayersReady[playerIndex] = false;
+
+            // Set the position of the pointer event to the position of the current cursor
+            pointerEvent.position = m_PlayerCursors[playerIndex].transform.position;
+
+            // All ray cast results will be stored in here
+            List<RaycastResult> raycastResults = new List<RaycastResult>();
+
+            // Perform the ray cast
+            m_CanvasGraphicRaycaster.Raycast(pointerEvent, raycastResults);
+
+            // Check whether the play tag is part of the results
+            foreach (var result in raycastResults)
+            {
+                // Cursor is hovering over the start bar, this means the player is ready
+                if (result.gameObject.tag == m_StartBarTag)
+                {
+                    m_PlayersReady[playerIndex] = true;
+                }
+            }
+        }
+    }
+
+    private void UpdatePlayerCounterText()
+    {
+        int totalNumberOfPlayersReady = 0;
+
+        foreach (bool isReady in m_PlayersReady)
+        {
+            // This player is ready
+            if (isReady)
+                ++totalNumberOfPlayersReady;
+        }
+
+        // Construct and update the counter text box
+        m_PlayerCounterText.text = m_PlayerCountPrefix + totalNumberOfPlayersReady + "/" + m_PlayersInParty + m_PlayerCountPostfix;
     }
 }

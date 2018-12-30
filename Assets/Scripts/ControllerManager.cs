@@ -34,7 +34,7 @@ public class ControllerManager
     public void Initialize()
     {
         // Allocate enough memory for all players
-        m_RegisteredControllersIndices = new List<int>(Global.MAXIMUM_NUMBER_OF_PLAYERS);
+        m_RegisteredControllersIndices = new List<int>(Global.MaximumNumberOfPlayers);
 
         FillControllerSpots();
     }
@@ -49,10 +49,10 @@ public class ControllerManager
     public void AddGameController(Global.Controllers type)
     {
         // The controller that is being added exceeds the maximum number of players allowed, no need to continue
-        if (m_RegisteredControllersIndices.Count > Global.MAXIMUM_NUMBER_OF_PLAYERS)
+        if (m_RegisteredControllersIndices.Count > Global.MaximumNumberOfPlayers)
             return;
 
-        for (int playerIndex = 0; playerIndex < Global.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
+        for (int playerIndex = 0; playerIndex < Global.MaximumNumberOfPlayers; ++playerIndex)
         {
             if (m_RegisteredControllersIndices[playerIndex] == (int)type)
             {
@@ -62,7 +62,7 @@ public class ControllerManager
         }
 
         // Register the controller index
-        for (int playerIndex = 0; playerIndex < Global.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
+        for (int playerIndex = 0; playerIndex < Global.MaximumNumberOfPlayers; ++playerIndex)
         {
             if (m_RegisteredControllersIndices[playerIndex] == (int)Global.Controllers.None)
             {
@@ -93,7 +93,7 @@ public class ControllerManager
         if (m_RegisteredControllersIndices.Count < 1)
             return;
 
-        for (int playerIndex = 0; playerIndex < Global.MAXIMUM_NUMBER_OF_PLAYERS; ++playerIndex)
+        for (int playerIndex = 0; playerIndex < Global.MaximumNumberOfPlayers; ++playerIndex)
         {
             // Found the controller that needs to be removed
             if (m_RegisteredControllersIndices[playerIndex] == (int)type)
@@ -135,7 +135,7 @@ public class ControllerManager
     private void FillControllerSpots()
     {
         // Set each controller slot to no controller at all
-        for (int controller = 0; controller < Global.MAXIMUM_NUMBER_OF_PLAYERS; ++controller)
+        for (int controller = 0; controller < Global.MaximumNumberOfPlayers; ++controller)
         {
             m_RegisteredControllersIndices.Add((int)Global.Controllers.None);
         }

@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public static class Global
 {
-    public const int MAXIMUM_NUMBER_OF_PLAYERS = 4;
+    public const int MaximumNumberOfPlayers = 4;
 
     // Fool-proof player number range
     public enum Player

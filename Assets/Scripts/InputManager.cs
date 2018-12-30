@@ -86,7 +86,7 @@ public class InputManager : MonoBehaviour
     // --------------------------------------------------------------
 
     // The order matters, index 0 maps to player one, index 1 map to player 2, etc...
-    private Global.Controllers[] m_PlayerControllers = new Global.Controllers[Global.MAXIMUM_NUMBER_OF_PLAYERS];
+    private Global.Controllers[] m_PlayerControllers = new Global.Controllers[Global.MaximumNumberOfPlayers];
 
     // --------------------------------------------------------------
 
