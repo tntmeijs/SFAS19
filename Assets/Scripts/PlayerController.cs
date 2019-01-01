@@ -82,8 +82,10 @@ public class PlayerController : MonoBehaviour
     void UpdateMovementState()
     {
         // Get Player's movement input and determine direction and set run speed
-        float horizontalInput = Input.GetAxisRaw("Horizontal_P1");
-        float verticalInput = Input.GetAxisRaw("Vertical_P1");
+        Global.PlayerInputData input = InputManager.instance.GetInputDataForPlayer(Global.Player.PlayerOne);
+
+        float horizontalInput = input.axisLeftStickHorizontal;
+        float verticalInput = input.axisLeftStickVertical;
 
         m_MovementDirection = new Vector3(horizontalInput, 0, verticalInput);
         m_MovementSpeed = m_RunSpeed;
@@ -91,8 +93,10 @@ public class PlayerController : MonoBehaviour
 
     void UpdateJumpState()
     {
+        Global.PlayerInputData input = InputManager.instance.GetInputDataForPlayer(Global.Player.PlayerOne);
+
         // Character can jump when standing on the ground
-        if (Input.GetButtonDown("Jump_P1") && m_CharacterController.isGrounded)
+        if (input.buttonRightBumper && m_CharacterController.isGrounded)
         {
             Jump();
         }
