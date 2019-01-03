@@ -62,10 +62,7 @@ public class CarSuspension : MonoBehaviour
     private float m_AngularDragWhileGrounded = 5.0f;
 
     // --------------------------------------------------------------
-
-    private float m_DriveInput;
-    private float m_SteerInput;
-
+    
     private int m_GroundedWheelCounter;
 
     private Rigidbody m_Rigidbody;
@@ -73,6 +70,26 @@ public class CarSuspension : MonoBehaviour
 #if UNITY_EDITOR
     private Vector3 m_OriginalCOM;
 #endif
+
+    // --------------------------------------------------------------
+
+    public bool IsAirborne()
+    {
+        // All wheels are in the air
+        return m_GroundedWheelCounter != m_Suspension.Length;
+    }
+
+    // Should only be called in a FixedUpdate loop, as this relates to physics
+    public void Steer(float steerInput)
+    {
+        m_Rigidbody.AddTorque(steerInput * transform.up * m_SteerForce, ForceMode.Force);
+    }
+
+    // Should only be called in a FixedUpdate loop, as this relates to physics
+    public void Drive(float driveInput)
+    {
+        m_Rigidbody.AddForce(driveInput * transform.forward * m_DriveForce, ForceMode.Force);
+    }
 
     // --------------------------------------------------------------
 
@@ -88,77 +105,11 @@ public class CarSuspension : MonoBehaviour
         m_Rigidbody.centerOfMass += m_CenterOfMassOffset;
     }
 
-    private void Update()
-    {
-        ProcessInput();
-    }
-
-    private void ProcessInput()
-    {
-        // Reset the input from the previous frame
-        ResetInput();
-
-        // Retrieve the player input data from the input manager
-        Global.PlayerInputData inputData = InputManager.instance.GetInputDataForPlayer(Global.Player.PlayerOne);
-
-        // No input allowed for this frame
-        if (!IsInputAllowed(inputData))
-            return;
-
-        if (inputData.buttonA)
-        {
-            // Drive
-            m_DriveInput = 1.0f;
-        }
-        else if (inputData.buttonB)
-        {
-            // Reverse
-            m_DriveInput = -1.0f;
-        }
-
-        if (m_DriveInput > 0)
-        {
-            // Driving forwards, use regular steering behavior
-            m_SteerInput = inputData.axisLeftStickHorizontal;
-        }
-        else if (m_DriveInput < 0)
-        {
-            // Driving backwards, use inverted steering behavior
-            m_SteerInput = -inputData.axisLeftStickHorizontal;
-        }
-    }
-
-    private void ResetInput()
-    {
-        m_DriveInput = 0.0f;
-        m_SteerInput = 0.0f;
-    }
-
-    private bool IsInputAllowed(Global.PlayerInputData inputData)
-    {
-        // No need to continue if there is not controller
-        if (inputData.controller == Global.Controllers.None)
-            return false;
-
-        // Cannot control the car while it is airborne
-        if (m_GroundedWheelCounter != m_Suspension.Length)
-            return false;
-
-        // All good to go
-        return true;
-    }
-
     private void FixedUpdate()
     {
         m_GroundedWheelCounter = 0;
 
         bool[] isGrounded = { false, false, false, false };
-
-        // Apply steering
-        m_Rigidbody.AddTorque(m_SteerInput * transform.up * m_SteerForce, ForceMode.Force);
-
-        // Apply movement
-        m_Rigidbody.AddForce(m_DriveInput * transform.forward * m_DriveForce, ForceMode.Force);
 
         // Apply hovering
         for (int i = 0; i < m_Suspension.Length; ++i)
@@ -209,6 +160,8 @@ public class CarSuspension : MonoBehaviour
     {
         if (m_Rigidbody)
         {
+            m_Rigidbody.centerOfMass = m_OriginalCOM + m_CenterOfMassOffset;
+
             Gizmos.color = Color.magenta;
             Gizmos.DrawCube(transform.position + m_OriginalCOM + m_CenterOfMassOffset, new Vector3(0.05f, 0.05f, 0.05f));
         }

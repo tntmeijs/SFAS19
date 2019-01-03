@@ -90,7 +90,8 @@ public class AIController : MonoBehaviour
         if(distance < 2.0f)
         {
             // Knock back player
-            m_PlayerController.AddForce((m_MovementDirection + new Vector3(0,2,0)) * 20.0f);
+            // NOTE: Commented-out to make it work with the WIP player controller
+            //m_PlayerController.AddForce((m_MovementDirection + new Vector3(0,2,0)) * 20.0f);
         }
 
         Debug.Log(distance);

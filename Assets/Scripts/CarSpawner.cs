@@ -46,7 +46,6 @@ public class CarSpawner : MonoBehaviour
 
         InputManager inputManager = m_InputManagerDebug.AddComponent<InputManager>();
         inputManager.SetControllerTypeForPlayer(Global.Player.PlayerOne, Global.Controllers.Keyboard);
-        inputManager.SetControllerTypeForPlayer(Global.Player.PlayerTwo, Global.Controllers.Joystick1);
     }
 #endif
 
@@ -81,9 +80,18 @@ public class CarSpawner : MonoBehaviour
             car.name = m_CarNamePrefix + (playerIndex + 1); // Easy to remember name, nothing important, but it keeps the scene hierarchy looking nice
 
             if (InputManager.instance.GetInputDataForPlayer((Global.Player)playerIndex).controller != Global.Controllers.None)
-                car.AddComponent<PlayerController>();   // Human player needs a player controller
+            {
+                // Human player needs a player controller
+                PlayerController playerController = car.AddComponent<PlayerController>();
+
+                // Set the correct player ID
+                playerController.SetPlayerID((Global.Player)playerIndex);
+            }
             else
-                car.AddComponent<AIController>();       // AI player needs an AI controller
+            {
+                // AI player needs an AI controller
+                car.AddComponent<AIController>();
+            }
         }
     }
 }

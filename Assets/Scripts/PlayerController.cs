@@ -5,38 +5,10 @@ public class PlayerController : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    // The character's running speed
-    [SerializeField]
-    float m_RunSpeed = 5.0f;
-
-    // The gravity strength
-    [SerializeField]
-    float m_Gravity = 60.0f;
-
-    // The maximum speed the character can fall
-    [SerializeField]
-    float m_MaxFallSpeed = 20.0f;
-
-    // The character's jump height
-    [SerializeField]
-    float m_JumpHeight = 4.0f;
-
     // --------------------------------------------------------------
 
-    // The charactercontroller of the player
-    CharacterController m_CharacterController;
-
-    // The current movement direction in x & z.
-    Vector3 m_MovementDirection = Vector3.zero;
-
-    // The current movement speed
-    float m_MovementSpeed = 0.0f;
-
-    // The current vertical / falling speed
-    float m_VerticalSpeed = 0.0f;
-
-    // The current movement offset
-    Vector3 m_CurrentMovementOffset = Vector3.zero;
+    // Car suspension system
+    CarSuspension m_SuspensionController;
 
     // The starting position of the player
     Vector3 m_SpawningPosition = Vector3.zero;
@@ -48,61 +20,32 @@ public class PlayerController : MonoBehaviour
     const float MAX_RESPAWN_TIME = 1.0f;
     float m_RespawnTime = MAX_RESPAWN_TIME;
 
-    // The force added to the player (used for knockbacks)
-    Vector3 m_Force = Vector3.zero;
+    // Player ID
+    Global.Player m_PlayerID;
+
+    // Holds the input for this frame
+    private float m_DriveInput;
+    private float m_SteerInput;
+
+    // --------------------------------------------------------------
+
+    public void SetPlayerID(Global.Player player)
+    {
+        m_PlayerID = Global.Player.PlayerOne;
+    }
 
     // --------------------------------------------------------------
 
     void Awake()
     {
-        m_CharacterController = GetComponent<CharacterController>();
+        m_SuspensionController = GetComponent<CarSuspension>();
     }
 
-    // Use this for initialization
     void Start()
     {
         m_SpawningPosition = transform.position;
     }
 
-    void Jump()
-    {
-        m_VerticalSpeed = Mathf.Sqrt(m_JumpHeight * m_Gravity);
-    }
-
-    void ApplyGravity()
-    {
-        // Apply gravity
-        m_VerticalSpeed -= m_Gravity * Time.deltaTime;
-
-        // Make sure we don't fall any faster than m_MaxFallSpeed.
-        m_VerticalSpeed = Mathf.Max(m_VerticalSpeed, -m_MaxFallSpeed);
-        m_VerticalSpeed = Mathf.Min(m_VerticalSpeed, m_MaxFallSpeed);
-    }
-
-    void UpdateMovementState()
-    {
-        // Get Player's movement input and determine direction and set run speed
-        Global.PlayerInputData input = InputManager.instance.GetInputDataForPlayer(Global.Player.PlayerOne);
-
-        float horizontalInput = input.axisLeftStickHorizontal;
-        float verticalInput = input.axisLeftStickVertical;
-
-        m_MovementDirection = new Vector3(horizontalInput, 0, verticalInput);
-        m_MovementSpeed = m_RunSpeed;
-    }
-
-    void UpdateJumpState()
-    {
-        Global.PlayerInputData input = InputManager.instance.GetInputDataForPlayer(Global.Player.PlayerOne);
-
-        // Character can jump when standing on the ground
-        if (input.buttonRightBumper && m_CharacterController.isGrounded)
-        {
-            Jump();
-        }
-    }
-
-    // Update is called once per frame
     void Update()
     {
         // If the player is dead update the respawn timer and exit update loop
@@ -112,47 +55,64 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // Update movement input
-        UpdateMovementState();
-
-        // Update jumping input and apply gravity
-        UpdateJumpState();
-        ApplyGravity();
-
-        // Calculate actual motion
-        m_CurrentMovementOffset = (m_MovementDirection * m_MovementSpeed + m_Force  + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
-
-        m_Force *= 0.95f;
-
-        // Move character
-        m_CharacterController.Move(m_CurrentMovementOffset);
-
-        // Rotate the character towards the mouse cursor
-        RotateCharacterTowardsMouseCursor();
+        ProcessInput();
+        m_SuspensionController.Steer(m_SteerInput);
+        m_SuspensionController.Drive(m_DriveInput);
     }
 
-    float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
+    private void ProcessInput()
     {
-        return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
-    }
+        // Reset the input from the previous frame
+        ResetInput();
 
-    void RotateCharacter(Vector3 movementDirection)
-    {
-        Quaternion lookRotation = Quaternion.LookRotation(movementDirection);
-        if (transform.rotation != lookRotation)
+        // Retrieve the player input data from the input manager
+        Global.PlayerInputData inputData = InputManager.instance.GetInputDataForPlayer(m_PlayerID);
+
+        // No input allowed for this frame
+        if (!IsInputAllowed(inputData))
+            return;
+
+        if (inputData.buttonA)
         {
-            transform.rotation = lookRotation;
+            // Drive
+            m_DriveInput = 1.0f;
+        }
+        else if (inputData.buttonB)
+        {
+            // Reverse
+            m_DriveInput = -1.0f;
+        }
+
+        if (m_DriveInput > 0)
+        {
+            // Driving forwards, use regular steering behavior
+            m_SteerInput = inputData.axisLeftStickHorizontal;
+        }
+        else if (m_DriveInput < 0)
+        {
+            // Driving backwards, use inverted steering behavior
+            m_SteerInput = -inputData.axisLeftStickHorizontal;
         }
     }
 
-    void RotateCharacterTowardsMouseCursor()
+    private void ResetInput()
     {
-        Vector3 mousePosInScreenSpace = Input.mousePosition;
-        Vector3 playerPosInScreenSpace = Camera.main.WorldToScreenPoint(transform.position);
-        Vector3 directionInScreenSpace = mousePosInScreenSpace - playerPosInScreenSpace;
+        m_DriveInput = 0.0f;
+        m_SteerInput = 0.0f;
+    }
 
-        float angle = Mathf.Atan2(directionInScreenSpace.y, directionInScreenSpace.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(-angle + 90.0f, Vector3.up);
+    private bool IsInputAllowed(Global.PlayerInputData inputData)
+    {
+        // No need to continue if there is not controller
+        if (inputData.controller == Global.Controllers.None)
+            return false;
+
+        // Cannot control the car while it is airborne
+        if (m_SuspensionController.IsAirborne())
+            return false;
+
+        // All good to go
+        return true;
     }
 
     public void Die()
@@ -175,10 +135,5 @@ public class PlayerController : MonoBehaviour
         m_IsAlive = true;
         transform.position = m_SpawningPosition;
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
-    }
-
-    public void AddForce(Vector3 force)
-    {
-        m_Force += force;
     }
 }
