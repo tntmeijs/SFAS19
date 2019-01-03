@@ -44,6 +44,10 @@ public class CarSuspension : MonoBehaviour
     [SerializeField]
     private float m_SteerForce = 100.0f;
 
+    // Basically the gravity acting on the vehicle
+    [SerializeField]
+    private float m_SpringDownForce = 100.0f;
+
     [Header("Miscellaneous physics")]
     // Drag applied to the rigidbody when the vehicle is not on the ground
     [SerializeField]
@@ -102,6 +106,10 @@ public class CarSuspension : MonoBehaviour
         m_OriginalCOM = m_Rigidbody.centerOfMass;
 #endif
 
+        // Custom gravity
+        m_Rigidbody.useGravity = false;
+
+        // Custom center of mass
         m_Rigidbody.centerOfMass += m_CenterOfMassOffset;
     }
 
@@ -130,6 +138,9 @@ public class CarSuspension : MonoBehaviour
             {
                 isGrounded[i] = false;
             }
+
+            // Apply gravity (or down force, depending on what it is used for in-game)
+            m_Rigidbody.AddForceAtPosition(Vector3.down * m_SpringDownForce, m_Suspension[i].position, ForceMode.Force);
         }
 
         foreach (bool grounded in isGrounded)
