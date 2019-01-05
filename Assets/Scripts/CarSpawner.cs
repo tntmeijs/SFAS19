@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CameraCreator))]
 public class CarSpawner : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -73,11 +74,20 @@ public class CarSpawner : MonoBehaviour
 
     private void SpawnCars()
     {
+        // The script responsible for creating the cameras
+        CameraCreator cameraCreator = GetComponent<CameraCreator>();
+
+        // TODO: Make this configurable!
+        // Create the split-screen camera set-up
+        cameraCreator.CreateSplitScreenSetup(CameraCreator.SplitStyle.SingleCamera);
+
         for (int playerIndex = 0; playerIndex < Global.MaximumNumberOfPlayers; ++playerIndex)
         {
             // Spawn the car
             GameObject car = Instantiate(m_PlayerCars[playerIndex], m_SpawnPoints[playerIndex].position, m_SpawnPoints[playerIndex].rotation);
-            car.name = m_CarNamePrefix + (playerIndex + 1); // Easy to remember name, nothing important, but it keeps the scene hierarchy looking nice
+
+            // Easy to remember name, nothing important, but it keeps the scene hierarchy looking nice
+            car.name = m_CarNamePrefix + (playerIndex + 1);
 
             if (InputManager.instance.GetInputDataForPlayer((Global.Player)playerIndex).controller != Global.Controllers.None)
             {
@@ -86,6 +96,9 @@ public class CarSpawner : MonoBehaviour
 
                 // Set the correct player ID
                 playerController.SetPlayerID((Global.Player)playerIndex);
+
+                // Make the camera follow this player (get the camera for this player, get the camera's follow script, use the follow script to set the target)
+                cameraCreator.GetCameraForPlayer((Global.Player)playerIndex).GetComponent<CameraFollow>().SetTargetTransform(car.transform);
             }
             else
             {

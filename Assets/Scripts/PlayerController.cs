@@ -72,29 +72,16 @@ public class PlayerController : MonoBehaviour
         if (!IsInputAllowed(inputData))
             return;
 
-        if (inputData.buttonA)
-        {
-            // Drive
-            m_DriveInput = 1.0f;
-        }
-        else if (inputData.buttonB)
-        {
-            // Reverse
-            m_DriveInput = -1.0f;
-        }
+        // Keyboard controls use slightly different buttons and "axes" to control the car
+        if (inputData.controller == Global.Controllers.Keyboard)
+            HandleKeyboardDriveInput(inputData);
+        else
+            HandleJoystickDriveInput(inputData);
 
-        if (m_DriveInput > 0)
-        {
-            // Driving forwards, use regular steering behavior
-            m_SteerInput = inputData.axisLeftStickHorizontal;
-        }
-        else if (m_DriveInput < 0)
-        {
-            // Driving backwards, use inverted steering behavior
-            m_SteerInput = -inputData.axisLeftStickHorizontal;
-        }
+        // Steering is the same for both control types
+        HandleSteerInput(inputData);
     }
-
+    
     private void ResetInput()
     {
         m_DriveInput = 0.0f;
@@ -113,6 +100,41 @@ public class PlayerController : MonoBehaviour
 
         // All good to go
         return true;
+    }
+
+    private void HandleKeyboardDriveInput(Global.PlayerInputData inputData)
+    {
+        // It is easier to use the keyboard "vertical stick" for driving
+        m_DriveInput = inputData.axisLeftStickVertical;
+    }
+
+    private void HandleJoystickDriveInput(Global.PlayerInputData inputData)
+    {
+        // Using a joystick, it is easier to drive using the A and B buttons
+        if (inputData.buttonA)
+        {
+            // Drive
+            m_DriveInput = 1.0f;
+        }
+        else if (inputData.buttonB)
+        {
+            // Reverse
+            m_DriveInput = -1.0f;
+        }
+    }
+
+    private void HandleSteerInput(Global.PlayerInputData inputData)
+    {
+        if (m_DriveInput > 0)
+        {
+            // Driving forwards, use regular steering behavior
+            m_SteerInput = inputData.axisLeftStickHorizontal;
+        }
+        else if (m_DriveInput < 0)
+        {
+            // Driving backwards, use inverted steering behavior
+            m_SteerInput = -inputData.axisLeftStickHorizontal;
+        }
     }
 
     public void Die()
