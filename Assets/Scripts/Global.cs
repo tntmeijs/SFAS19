@@ -12,6 +12,8 @@ public static class Global
     // Fool-proof player number range
     public enum Player
     {
+        Invalid = -1,
+
         PlayerOne = 0,
         PlayerTwo = 1,
         PlayerThree = 2,
