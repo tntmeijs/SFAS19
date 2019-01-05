@@ -4,22 +4,32 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    // The Camera Target
-    [SerializeField]
-    Transform m_PlayerTransform;
+    // --------------------------------------------------------------
 
     // The Z Distance from the Camera Target
     [SerializeField]
-    float m_CameraDistanceZ = 15.0f;
+    private float m_CameraDistanceZ = 15.0f;
 
-    // Use this for initialization
-    void Start ()
+    // --------------------------------------------------------------
+
+    // The Camera Target
+    private Transform m_PlayerTransform;
+
+    // --------------------------------------------------------------
+
+    // Directly set the camera follow target
+    public void SetTargetTransform(Transform target)
     {
-		
+        m_PlayerTransform = target;
+    }
+
+    // --------------------------------------------------------------
+
+    private void Start ()
+    {
 	}
 	
-	// Update is called once per frame
-	void Update ()
+	private void Update ()
     {
         transform.position = new Vector3(m_PlayerTransform.position.x, transform.position.y, m_PlayerTransform.position.z - m_CameraDistanceZ);
 	}

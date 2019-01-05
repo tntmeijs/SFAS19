@@ -10,7 +10,7 @@ public class CameraCreator : MonoBehaviour
     [Header("Configuration")]
     // Name of the cameras to make it easy to identify in the hierarchy
     [SerializeField]
-    private string m_CameraNamePrefix = "PlayerCamera";
+    private string m_CameraNamePrefix = "CameraFollower";
 
     // Background color
     [SerializeField]
@@ -111,6 +111,11 @@ public class CameraCreator : MonoBehaviour
         return m_CreatedCameras[(int)playerID];
     }
 
+    public GameObject[] GetCameraArray()
+    {
+        return m_CreatedCameras;
+    }
+
     // --------------------------------------------------------------
 
     private void CreateSingleSetup()
@@ -197,6 +202,9 @@ public class CameraCreator : MonoBehaviour
         
         // Add a camera component to turn the object into a camera
         Camera newCamera = cameraObject.AddComponent<Camera>();
+
+        // Add the ability to follow the player to the camera object
+        cameraObject.AddComponent<CameraFollow>();
 
         // Apply camera background color
         newCamera.backgroundColor = m_CameraSkyColor;
