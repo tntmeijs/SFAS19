@@ -169,6 +169,7 @@ public class CarSuspension : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        // Visualize the center of mass
         if (m_Rigidbody)
         {
             m_Rigidbody.centerOfMass = m_OriginalCOM + m_CenterOfMassOffset;
@@ -177,6 +178,7 @@ public class CarSuspension : MonoBehaviour
             Gizmos.DrawCube(transform.position + m_OriginalCOM + m_CenterOfMassOffset, new Vector3(0.05f, 0.05f, 0.05f));
         }
 
+        // Visualize the suspension rays
         foreach (var hoverpoint in m_Suspension)
         {
             Gizmos.color = Color.yellow;
