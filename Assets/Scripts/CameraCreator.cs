@@ -218,7 +218,7 @@ public class CameraCreator : MonoBehaviour
         followScript.SetCameraTargetOffset(m_CameraCarOffset);
 
         // Use the specified interpolation speed
-        followScript.SetCameraInterpolationSpeed(m_CameraInterpolationSpeed);
+        followScript.SetCameraMovementInterpolationSpeed(m_CameraInterpolationSpeed);
 
         // Apply camera background color
         newCamera.backgroundColor = m_CameraSkyColor;
