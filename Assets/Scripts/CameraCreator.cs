@@ -20,6 +20,10 @@ public class CameraCreator : MonoBehaviour
     [SerializeField]
     private Vector3 m_CameraCarOffset = new Vector3(0.0f, 3.0f, -10.0f);
 
+    // Interpolation speed (smooth camera follow)
+    [SerializeField]
+    private float m_CameraInterpolationSpeed = 1.0f;
+
     // --------------------------------------------------------------
 
     // References to all cameras created by this script (player ID in ascending order starting with player one)
@@ -202,7 +206,7 @@ public class CameraCreator : MonoBehaviour
     private void CreateCamera(Global.Player playerID, float x, float y, float width, float height)
     {
         // Object to hold the camera component and script
-        GameObject cameraObject = new GameObject("CameraPlayer" + playerID);
+        GameObject cameraObject = new GameObject(m_CameraNamePrefix + playerID);
         
         // Add a camera component to turn the object into a camera
         Camera newCamera = cameraObject.AddComponent<Camera>();
@@ -212,6 +216,9 @@ public class CameraCreator : MonoBehaviour
 
         // Place the camera using the specified offset
         followScript.SetCameraTargetOffset(m_CameraCarOffset);
+
+        // Use the specified interpolation speed
+        followScript.SetCameraInterpolationSpeed(m_CameraInterpolationSpeed);
 
         // Apply camera background color
         newCamera.backgroundColor = m_CameraSkyColor;

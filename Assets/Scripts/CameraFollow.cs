@@ -12,6 +12,9 @@ public class CameraFollow : MonoBehaviour
     // The Camera Target
     private Transform m_PlayerTransform;
 
+    // Multiplier for Time.deltaTime when linear interpolating
+    private float m_InterpolationSpeed;
+
     // --------------------------------------------------------------
 
     // Directly set the camera follow target
@@ -26,11 +29,17 @@ public class CameraFollow : MonoBehaviour
         m_CameraOffset = offset;
     }
 
+    public void SetCameraInterpolationSpeed(float speed)
+    {
+        m_InterpolationSpeed = speed;
+    }
+
     // --------------------------------------------------------------
 
     // Camera updates are handled here to ensure that all movement for this frame has been done already
     private void LateUpdate()
     {
-        transform.position = m_PlayerTransform.position + m_CameraOffset;
+        // Smoothly follow the car
+        transform.position = Vector3.Lerp(transform.position, m_PlayerTransform.position + m_CameraOffset, Time.deltaTime * m_InterpolationSpeed);
     }
 }
