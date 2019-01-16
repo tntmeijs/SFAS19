@@ -10,7 +10,6 @@ public static class Global
     public const int MaximumNumberOfPlayers = 4;
 
     // Name of the Animator state machine parameters (use m_<type>_name to make it easy to know what type of parameter the Animator expects)
-    public const string m_INT_NearbyCarCount = "INFO_NearbyCarCount";
     public const string m_FLOAT_ClosestDistanceToOtherCar = "INFO_ClosestDistanceToOtherCar";
     public const string m_BOOL_TakeOver = "ACTION_TakeOver";
     public const string m_BOOL_UsePowerUp = "ACTION_UsePowerUp";

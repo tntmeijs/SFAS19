@@ -4,22 +4,26 @@ using UnityEngine;
 
 public class DetermineBestAction : StateMachineBehaviour
 {
-    private void OnStateEnter()
+    private void Awake()
     {
         //
     }
 
-    private void OnStateExit()
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        //
+    }
+
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+    }
+
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         //
     }
 
     private void OnDisable()
-    {
-        //
-    }
-
-    private void OnStateUpdate()
     {
         //
     }
