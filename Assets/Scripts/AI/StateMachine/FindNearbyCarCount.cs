@@ -9,31 +9,34 @@ public class FindNearbyCarCount : StateMachineBehaviour
     [Header("State machine information")]
     // Name of the car count parameter
     [SerializeField]
-    private string m_INT_NearbyCarCount = "INFO_NearbyCarCount";
+    private const string m_INT_NearbyCarCount = "INFO_NearbyCarCount";
+
+    // Name of the distance to the closest car parameter
+    [SerializeField]
+    private const string m_FLOAT_ClosestDistanceToOtherCar = "INFO_ClosestDistanceToOtherCar";
 
     [Header("Tags")]
     // Name of the tag assigned to all cars
     [SerializeField]
-    private string m_CarTag = "Car";
+    private const string m_CarTag = "Car";
 
     // --------------------------------------------------------------
+
+    // References have already been set
+    private bool m_SetupCompleted = false;
 
     // Detection trigger assigned to the car
     private SphereCollider m_NearbyDetector = null;
 
-    // Number of cars near this car
-    private int m_CarsNearby = 0;
-
     // --------------------------------------------------------------
-
-    private void Awake()
-    {
-        //
-    }
-
+    
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //
+        // Only set references once
+        if (!m_SetupCompleted)
+            SetReferencesIfNotSet(animator.gameObject);
+
+        Debug.Log("Enter");
     }
     
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -45,8 +48,14 @@ public class FindNearbyCarCount : StateMachineBehaviour
         //
     }
 
-    private void OnDisable()
+    private void SetReferencesIfNotSet(GameObject gameObject)
     {
-        //
+        // Never run the reference retrieval code again
+        m_SetupCompleted = true;
+
+        // Each car has a sphere trigger that can be used to detect the distance to the closest car
+        m_NearbyDetector = gameObject.GetComponent<SphereCollider>();
+
+        Debug.Log("References set");
     }
 }

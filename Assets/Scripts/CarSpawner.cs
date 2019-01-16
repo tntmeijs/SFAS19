@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
 [RequireComponent(typeof(CameraCreator))]
@@ -12,7 +13,15 @@ public class CarSpawner : MonoBehaviour
     [SerializeField]
     private string m_CarNamePrefix = "CarPlayer_";
 
+    // Radius of the AI detector trigger
+    [SerializeField]
+    private float m_DetectorRadiusForAI = 10.0f;
+
     [Header("References")]
+    // State machine controller that defines AI behavior
+    [SerializeField]
+    private AnimatorController m_AIStateMachineController;
+
     // Transforms where cars should be spawned in a level
     [SerializeField]
     private Transform[] m_SpawnPoints = new Transform[Global.MaximumNumberOfPlayers];
@@ -66,6 +75,9 @@ public class CarSpawner : MonoBehaviour
                 failed = true;
         }
 
+        if (!m_AIStateMachineController)
+            failed = true;
+
         if (failed)
         {
             Debug.LogError("CRITICAL ERROR: Not all references have been set!");
@@ -104,6 +116,15 @@ public class CarSpawner : MonoBehaviour
             {
                 // AI player needs an AI controller
                 car.AddComponent<AIController>();
+
+                // AI players are controlled by state machines, add an Animator as the state machine controller
+                var animator = car.AddComponent<Animator>();
+                animator.runtimeAnimatorController = m_AIStateMachineController;
+
+                // AI player needs a sphere collider to check nearby cars
+                var sphereCollider = car.AddComponent<SphereCollider>();
+                sphereCollider.radius = m_DetectorRadiusForAI;
+                sphereCollider.isTrigger = true;
             }
         }
     }
