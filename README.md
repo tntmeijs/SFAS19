@@ -44,11 +44,9 @@ The project uses three "main" branches:
 
 Massive thanks to [Kenney](https://kenney.nl), who put loads of assets online for free.
 
-*Asset packs used in this project:*
+*Kenney asset packs used in this project:*
 
-- Minigolf
 - Game icons
-- Font pack
-- Particle pack
 - Racing kit
 - Space UI
+- Nature pack extended
