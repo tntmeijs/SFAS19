@@ -13,10 +13,6 @@ public class CarSpawner : MonoBehaviour
     [SerializeField]
     private string m_CarNamePrefix = "CarPlayer_";
 
-    // Radius of the AI detector trigger
-    [SerializeField]
-    private float m_DetectorRadiusForAI = 10.0f;
-
     [Header("References")]
     // State machine controller that defines AI behavior
     [SerializeField]
@@ -120,11 +116,6 @@ public class CarSpawner : MonoBehaviour
                 // AI players are controlled by state machines, add an Animator as the state machine controller
                 var animator = car.AddComponent<Animator>();
                 animator.runtimeAnimatorController = m_AIStateMachineController;
-
-                // AI player needs a sphere collider to check nearby cars
-                var sphereCollider = car.AddComponent<SphereCollider>();
-                sphereCollider.radius = m_DetectorRadiusForAI;
-                sphereCollider.isTrigger = true;
             }
         }
     }
