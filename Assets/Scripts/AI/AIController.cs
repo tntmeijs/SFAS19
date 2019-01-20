@@ -15,29 +15,34 @@ public class AIController : MonoBehaviour
     // Choice when the track splits
     private int m_SplitChoice = -1;
 
+    // way point index for the regular racing line
+    private int m_MainTrackWaypointIndex = 0;
+
+    // way point index for the nested way points (splits, pit lane, etc.)
+    private int m_NestedTrackWaypointIndex = 0;
+
     // Enter the pit lane whenever the health of the car falls below this threshold (percentage)
     private float m_PitLaneHealthThreshold = 0.2f;
 
-    // When the car gets this close to the current waypoint, the waypoint system advanced the index by one
-    float m_NextWaypointSelectionDistance = 8.0f;
+    // When the car gets this close to the current way point, the way point system advanced the index by one
+    private float m_NextWaypointSelectionDistance = 8.0f;
 
-    // Whether the player is alive or not
-    bool m_IsAlive = true;
-
-    // Waypoint index for the regular racing line
-    int m_MainTrackWaypointIndex = 0;
-
-    // Waypoint index for the nested waypoints (splits, pit lane, etc.)
-    int m_NestedTrackWaypointIndex = 0;
-
+    // Steering value passed to the suspension script (between -1 and 1)
     float m_SteeringValue = 0.0f;
 
+    // Whether the player is alive or not
+    private bool m_IsAlive = true;
+
+    // Object that contains the ideal racing line way points
     Transform m_WaypointContainer = null;
 
+    // Script that allows the car to drive
     CarSuspension m_CarSuspension = null;
 
+    // Health of the player
     Health m_Health = null;
 
+    // More human-readble version of a 0 == false and 1 == true choice down below
     enum TrackSplitOptions
     {
         Invalid = -1,
@@ -65,29 +70,32 @@ public class AIController : MonoBehaviour
 
     private void Awake()
     {
+        // Set references
+        // It is safe to assume that these scripts exist on this game object, as it is part of its prefab
         m_CarSuspension = GetComponent<CarSuspension>();
         m_Health = GetComponent<Health>();
 
-        // Seed the random number generator using the time since the UNIX timestamp
+        // Seed the random number generator using the time since the UNIX epoch
         System.TimeSpan timeSinceUnixEpoch = (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1));
         Random.InitState(timeSinceUnixEpoch.Seconds);
     }
 
-    Vector3 targetPosition;
     private void Update()
     {
+        // Car is "dead", cannot do any updates for this frame
         if (!m_IsAlive)
         {
             return;
         }
 
+        // Current node of the waypoint system
         Transform thisNode = m_WaypointContainer.GetChild(m_MainTrackWaypointIndex);
 
-        // Used when a waypoint is a child of an existing waypoint (nested track)
+        // Used when a way point is a child of an existing way point (nested track)
         Transform nestedThisNode = null;
 
         // By default, use the current node as the target to steer towards
-        targetPosition = thisNode.position;
+        Vector3 targetPosition = thisNode.position;
 
         if (thisNode.gameObject.CompareTag(m_TrackSplitTag))
         {
@@ -97,36 +105,27 @@ public class AIController : MonoBehaviour
             
             // m_SplitChoice == 0 --> left
             // m_SplitChoice == 1 --> right
-            nestedThisNode = thisNode.GetChild(m_SplitChoice).GetChild(m_NestedTrackWaypointIndex);
+            nestedThisNode = thisNode.GetChild(m_SplitChoice);
 
-            // Use a new target
-            targetPosition = nestedThisNode.position;
+            // Use a new target (child of the child node)
+            targetPosition = nestedThisNode.GetChild(m_NestedTrackWaypointIndex).position;
 
-            // Continue on the sub track
-            if (Vector3.Distance(transform.position, targetPosition) < m_NextWaypointSelectionDistance)
-                ++m_NestedTrackWaypointIndex;
-
-            // Reached the end of the sub track
-            if (m_NestedTrackWaypointIndex > thisNode.GetChild(m_SplitChoice).childCount - 1)
-                ++m_MainTrackWaypointIndex;
+            // Move on to the next way point once the car gets close
+            UpdateNestedTrackWayPoint(targetPosition, nestedThisNode);
         }
         else if (thisNode.gameObject.CompareTag(m_PitSplitTag))
         {
             // Enter the pit lane if the health value falls below the acceptable amount
             if (m_Health.GetCurrentHealthValue() < m_Health.GetMaximumHealthValue() * m_PitLaneHealthThreshold)
             {
+                // First child node of the sub-track container node
                 nestedThisNode = thisNode.GetChild(m_NestedTrackWaypointIndex);
 
                 // Use a new target
                 targetPosition = nestedThisNode.position;
 
-                // Continue on the pit lane
-                if (Vector3.Distance(transform.position, targetPosition) < m_NextWaypointSelectionDistance)
-                    ++m_NestedTrackWaypointIndex;
-
-                // Reached the end of the sub track
-                if (m_NestedTrackWaypointIndex > thisNode.childCount - 1)
-                    ++m_MainTrackWaypointIndex;
+                // Move on to the next way point once the car gets close
+                UpdateNestedTrackWayPoint(targetPosition, thisNode);
             }
             else
             {
@@ -157,15 +156,22 @@ public class AIController : MonoBehaviour
         m_SteeringValue = localDirection.x;
     }
 
-    private void FixedUpdate()
+    // Check whether the car passed a way point in the current sub-track and if so, move on to the next nested way point
+    private void UpdateNestedTrackWayPoint(Vector3 target, Transform node)
     {
-        m_CarSuspension.Drive(0.5f);
-        m_CarSuspension.Steer(m_SteeringValue);
+        // Continue on the sub track
+        if (Vector3.Distance(transform.position, target) < m_NextWaypointSelectionDistance)
+            ++m_NestedTrackWaypointIndex;
+
+        // Reached the end of the sub track
+        if (m_NestedTrackWaypointIndex > node.childCount - 1)
+            ++m_MainTrackWaypointIndex;
     }
 
-    private void OnDrawGizmos()
+    private void FixedUpdate()
     {
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawSphere(targetPosition, 1.0f);
+        // #TODO: Add brake zones and "smart" throttling
+        m_CarSuspension.Drive(0.5f);
+        m_CarSuspension.Steer(m_SteeringValue);
     }
 }
