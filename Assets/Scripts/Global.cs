@@ -9,6 +9,11 @@ public static class Global
 {
     public const int MaximumNumberOfPlayers = 4;
 
+    // Name of the Animator state machine parameters (use m_<type>_name to make it easy to know what type of parameter the Animator expects)
+    public const string m_BOOL_TakeOver = "ACTION_TakeOver";
+    public const string m_BOOL_UsePowerUp = "ACTION_UsePowerUp";
+    public const string m_BOOL_StayBehindOpponent = "ACTION_StayBehindOpponent";
+
     // Fool-proof player number range
     public enum Player
     {
