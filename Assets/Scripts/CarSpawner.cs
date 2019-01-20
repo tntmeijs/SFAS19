@@ -14,6 +14,10 @@ public class CarSpawner : MonoBehaviour
     private string m_CarNamePrefix = "CarPlayer_";
 
     [Header("References")]
+    // Container for the ideal racing line waypoints
+    [SerializeField]
+    private Transform m_WaypointContainer = null;
+
     // State machine controller that defines AI behavior
     [SerializeField]
     private AnimatorController m_AIStateMachineController;
@@ -71,7 +75,8 @@ public class CarSpawner : MonoBehaviour
                 failed = true;
         }
 
-        if (!m_AIStateMachineController)
+        if (!m_AIStateMachineController ||
+            !m_WaypointContainer)
             failed = true;
 
         if (failed)
@@ -111,7 +116,8 @@ public class CarSpawner : MonoBehaviour
             else
             {
                 // AI player needs an AI controller
-                car.AddComponent<AIController>();
+                var aiController = car.AddComponent<AIController>();
+                aiController.SetWaypointContainer(m_WaypointContainer);
 
                 // AI players are controlled by state machines, add an Animator as the state machine controller
                 var animator = car.AddComponent<Animator>();
