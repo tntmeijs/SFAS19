@@ -92,7 +92,9 @@ public class CarSuspension : MonoBehaviour
     // Should only be called in a FixedUpdate loop, as this relates to physics
     public void Drive(float driveInput)
     {
-        m_Rigidbody.AddForce(driveInput * transform.forward * m_DriveForce, ForceMode.Force);
+        // Only allow the wheels to drive the car when they they touch the ground
+        if (!IsAirborne())
+            m_Rigidbody.AddForce(driveInput * transform.forward * m_DriveForce, ForceMode.Force);
     }
 
     // --------------------------------------------------------------
@@ -151,7 +153,7 @@ public class CarSuspension : MonoBehaviour
             ++m_GroundedWheelCounter;
         }
 
-        if (m_GroundedWheelCounter == isGrounded.Length)
+        if (!IsAirborne())
         {
             // All wheels grounded
             m_Rigidbody.drag = m_DragWhileGrounded;

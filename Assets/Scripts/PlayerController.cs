@@ -56,6 +56,11 @@ public class PlayerController : MonoBehaviour
         }
 
         ProcessInput();
+    }
+
+    private void FixedUpdate()
+    {
+        // Apply the input
         m_SuspensionController.Steer(m_SteerInput);
         m_SuspensionController.Drive(m_DriveInput);
     }
