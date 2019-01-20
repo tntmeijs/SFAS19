@@ -15,6 +15,9 @@ public class AIController : MonoBehaviour
     // Choice when the track splits
     private int m_SplitChoice = -1;
 
+    // Enter the pit lane whenever the health of the car falls below this threshold (percentage)
+    private float m_PitLaneHealthThreshold = 0.2f;
+
     // When the car gets this close to the current waypoint, the waypoint system advanced the index by one
     float m_NextWaypointSelectionDistance = 8.0f;
 
@@ -32,6 +35,8 @@ public class AIController : MonoBehaviour
     Transform m_WaypointContainer = null;
 
     CarSuspension m_CarSuspension = null;
+
+    Health m_Health = null;
 
     enum TrackSplitOptions
     {
@@ -61,6 +66,7 @@ public class AIController : MonoBehaviour
     private void Awake()
     {
         m_CarSuspension = GetComponent<CarSuspension>();
+        m_Health = GetComponent<Health>();
 
         // Seed the random number generator using the time since the UNIX timestamp
         System.TimeSpan timeSinceUnixEpoch = (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1));
@@ -75,9 +81,10 @@ public class AIController : MonoBehaviour
             return;
         }
 
-        int thisIndex = m_MainTrackWaypointIndex;
+        Transform thisNode = m_WaypointContainer.GetChild(m_MainTrackWaypointIndex);
 
-        Transform thisNode = m_WaypointContainer.GetChild(thisIndex);
+        // Used when a waypoint is a child of an existing waypoint (nested track)
+        Transform nestedThisNode = null;
 
         // By default, use the current node as the target to steer towards
         targetPosition = thisNode.position;
@@ -87,9 +94,7 @@ public class AIController : MonoBehaviour
             // Randomly decide left of right
             if (m_SplitChoice == (int)TrackSplitOptions.Invalid)
                 m_SplitChoice = Random.Range(0, 2);
-
-            Transform nestedThisNode = null;
-
+            
             // m_SplitChoice == 0 --> left
             // m_SplitChoice == 1 --> right
             nestedThisNode = thisNode.GetChild(m_SplitChoice).GetChild(m_NestedTrackWaypointIndex);
@@ -107,7 +112,27 @@ public class AIController : MonoBehaviour
         }
         else if (thisNode.gameObject.CompareTag(m_PitSplitTag))
         {
-            // Pit lane starts here
+            // Enter the pit lane if the health value falls below the acceptable amount
+            if (m_Health.GetCurrentHealthValue() < m_Health.GetMaximumHealthValue() * m_PitLaneHealthThreshold)
+            {
+                nestedThisNode = thisNode.GetChild(m_NestedTrackWaypointIndex);
+
+                // Use a new target
+                targetPosition = nestedThisNode.position;
+
+                // Continue on the pit lane
+                if (Vector3.Distance(transform.position, targetPosition) < m_NextWaypointSelectionDistance)
+                    ++m_NestedTrackWaypointIndex;
+
+                // Reached the end of the sub track
+                if (m_NestedTrackWaypointIndex > thisNode.childCount - 1)
+                    ++m_MainTrackWaypointIndex;
+            }
+            else
+            {
+                // Ignore the sub track and skip right to the next node
+                ++m_MainTrackWaypointIndex;
+            }
         }
         else
         {
@@ -116,15 +141,13 @@ public class AIController : MonoBehaviour
             m_NestedTrackWaypointIndex = 0;
 
             // Regular track following
-            if (Vector3.Distance(transform.position, targetPosition) <= m_NextWaypointSelectionDistance)
-            {
-                // Loop to the beginning of the array
-                if (m_MainTrackWaypointIndex == m_WaypointContainer.childCount - 1)
-                    m_MainTrackWaypointIndex = 0;
-                else
-                    ++m_MainTrackWaypointIndex;
-            }
+            if (Vector3.Distance(transform.position, targetPosition) < m_NextWaypointSelectionDistance)
+                ++m_MainTrackWaypointIndex;
         }
+        
+        // Loop to the beginning of the array
+        if (m_MainTrackWaypointIndex > m_WaypointContainer.childCount - 1)
+            m_MainTrackWaypointIndex = 0;
 
         // Normalized vector in local space from the car to the current node
         Vector3 localDirection = transform.InverseTransformVector((targetPosition - transform.position).normalized);
