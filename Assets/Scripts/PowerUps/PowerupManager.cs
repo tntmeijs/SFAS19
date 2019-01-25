@@ -38,14 +38,12 @@ public class PowerupManager : MonoBehaviour
 
                 // Boost pad power-up
             case PowerupType.Booster:
-                PowerupBoost boost = new PowerupBoost();
-                boost.ActivatePowerUp();
+                gameObject.AddComponent<PowerupBoost>().ActivatePowerUp();
                 break;
 
                 // Missile volley power-up
             case PowerupType.Missiles:
-                PowerupMissile missile = new PowerupMissile();
-                missile.ActivatePowerUp();
+                gameObject.AddComponent<PowerupMissile>().ActivatePowerUp();
                 break;
         }
 
