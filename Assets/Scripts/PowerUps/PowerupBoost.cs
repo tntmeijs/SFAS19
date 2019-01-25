@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerupBoost : MonoBehaviour
+public class PowerupBoost : PowerupBase
 {
+    // --------------------------------------------------------------
+
+    // --------------------------------------------------------------
+
     private void Start()
     {
 
