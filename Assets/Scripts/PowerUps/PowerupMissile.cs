@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(SphereCollider))]
-public class PowerupBase : MonoBehaviour
+public class PowerupMissile : MonoBehaviour
 {
     private void Start()
     {
