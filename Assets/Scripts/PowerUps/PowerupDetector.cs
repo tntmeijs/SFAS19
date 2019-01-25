@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SphereCollider))]
-public class PowerupBase : MonoBehaviour
+public class PowerupDetector : MonoBehaviour
 {
     // --------------------------------------------------------------
 
@@ -16,25 +16,9 @@ public class PowerupBase : MonoBehaviour
     [SerializeField]
     private PowerupManager.PowerupType m_PowerUpType = PowerupManager.PowerupType.None;
 
-    // Time until the power-up reappears again
-    [SerializeField]
-    private float m_PowerUpCooldown = 2.0f;
-
     // --------------------------------------------------------------
 
-    private SphereCollider m_Trigger = null;
-    private GameObject m_MeshContainer = null;
-
     // --------------------------------------------------------------
-
-    private void Awake()
-    {
-        // No need to check if this is valid, it always succeeds because this script REQUIRES this component
-        m_Trigger = GetComponent<SphereCollider>();
-
-        // The mesh container object is the first child of the root (which holds this script)
-        m_MeshContainer = transform.GetChild(0).gameObject;
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -47,21 +31,8 @@ public class PowerupBase : MonoBehaviour
             // Let the player know which type of power-up they collected
             carRoot.gameObject.GetComponent<PowerupManager>().SetPowerUp(m_PowerUpType);
 
-            // Hide the power-up until the time-out finishes
-            StartCoroutine(PowerUpTimeOut());
+            // "Consume" the power-up
+            Destroy(gameObject);
         }
-    }
-
-    private IEnumerator PowerUpTimeOut()
-    {
-        // Disable the mesh of the object and the collider on the root
-        m_MeshContainer.SetActive(false);
-        m_Trigger.enabled = false;
-
-        yield return new WaitForSeconds(m_PowerUpCooldown);
-
-        // Revert the object back to its default state
-        m_MeshContainer.SetActive(true);
-        m_Trigger.enabled = true;
     }
 }

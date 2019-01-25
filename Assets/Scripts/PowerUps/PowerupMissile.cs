@@ -2,19 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerupMissile : PowerupBase
+public class PowerupMissile : IPowerUp
 {
     // --------------------------------------------------------------
 
     // --------------------------------------------------------------
 
-    private void Start()
+    public void ActivatePowerUp()
     {
-
-    }
-
-    private void Update()
-    {
-
+        Debug.Log("Missiles away!");
     }
 }

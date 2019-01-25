@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(CarSuspension))]
+[RequireComponent(typeof(PowerupManager))]
 public class PlayerController : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -23,6 +25,9 @@ public class PlayerController : MonoBehaviour
     // Player ID
     Global.Player m_PlayerID;
 
+    // Power-up manager
+    PowerupManager m_PowerUpManager = null;
+
     // Holds the input for this frame
     private float m_DriveInput;
     private float m_SteerInput;
@@ -39,6 +44,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         m_SuspensionController = GetComponent<CarSuspension>();
+        m_PowerUpManager = GetComponent<PowerupManager>();
     }
 
     void Start()
@@ -48,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // If the player is dead update the respawn timer and exit update loop
+        // If the player is dead update the re-spawn timer and exit update loop
         if(!m_IsAlive)
         {
             UpdateRespawnTime();
@@ -85,6 +91,9 @@ public class PlayerController : MonoBehaviour
 
         // Steering is the same for both control types
         HandleSteerInput(inputData);
+
+        // Power-up activation is the same for both control types
+        HandlePowerUpInput(inputData);
     }
     
     private void ResetInput()
@@ -140,6 +149,13 @@ public class PlayerController : MonoBehaviour
             // Driving backwards, use inverted steering behavior
             m_SteerInput = -inputData.axisLeftStickHorizontal;
         }
+    }
+
+    private void HandlePowerUpInput(Global.PlayerInputData inputData)
+    {
+        // Try to use a power-up
+        if (inputData.buttonRightBumper)
+            m_PowerUpManager.Activate();
     }
 
     public void Die()

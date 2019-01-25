@@ -2,19 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerupBoost : PowerupBase
+public class PowerupBoost : IPowerUp
 {
     // --------------------------------------------------------------
 
     // --------------------------------------------------------------
 
-    private void Start()
+    public void ActivatePowerUp()
     {
-
-    }
-
-    private void Update()
-    {
-
+        Debug.Log("Speeeeed!");
     }
 }
