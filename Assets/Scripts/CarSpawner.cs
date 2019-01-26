@@ -92,7 +92,7 @@ public class CarSpawner : MonoBehaviour
 
         // TODO: Make this configurable!
         // Create the split-screen camera set-up
-        cameraCreator.CreateSplitScreenSetup(CameraCreator.SplitStyle.SingleCamera);
+        cameraCreator.CreateSplitScreenSetup(CameraCreator.SplitStyle.QuadCamera);
 
         for (int playerIndex = 0; playerIndex < Global.MaximumNumberOfPlayers; ++playerIndex)
         {
@@ -109,9 +109,6 @@ public class CarSpawner : MonoBehaviour
 
                 // Set the correct player ID
                 playerController.SetPlayerID((Global.Player)playerIndex);
-
-                // Make the camera follow this player (get the camera for this player, get the camera's follow script, use the follow script to set the target)
-                cameraCreator.GetCameraForPlayer((Global.Player)playerIndex).GetComponent<CameraFollow>().SetTargetTransform(car.transform);
             }
             else
             {
@@ -123,6 +120,9 @@ public class CarSpawner : MonoBehaviour
                 var animator = car.AddComponent<Animator>();
                 animator.runtimeAnimatorController = m_AIStateMachineController;
             }
+
+            // Make the camera follow this player (get the camera for this player, get the camera's follow script, use the follow script to set the target)
+            cameraCreator.GetCameraForPlayer((Global.Player)playerIndex).GetComponent<CameraFollow>().SetTargetTransform(car.transform);
         }
     }
 }
