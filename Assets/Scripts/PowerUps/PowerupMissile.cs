@@ -50,6 +50,10 @@ public class PowerupMissile : MonoBehaviour
             Debug.LogError("Error: not all references have been set properly!");
         }
 
+        // Seed the random number generator using the time since the UNIX epoch
+        System.TimeSpan timeSinceUnixEpoch = (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1));
+        Random.InitState(timeSinceUnixEpoch.Seconds);
+
         // Only enable the power-up when the power-up manager activates it
         enabled = false;
     }
