@@ -24,6 +24,12 @@ public class AIController : MonoBehaviour
     // way point index for the nested way points (splits, pit lane, etc.)
     private int m_NestedTrackWaypointIndex = 0;
 
+    // Make the AI feel more human by giving it a random error margin
+    // It is important to keep these numbers close to 1, because the throttle and steering values will be multiplied
+    // by a random value between the minimum and the maximum.
+    private float m_MinimumErrorMargin = 0.9f;
+    private float m_MaximumErrorMargin = 1.1f;
+
     // Enter the pit lane whenever the health of the car falls below this threshold (percentage)
     private float m_PitLaneHealthThreshold = 0.2f;
 
@@ -31,7 +37,7 @@ public class AIController : MonoBehaviour
     private float m_NextWaypointSelectionDistance = 8.0f;
 
     // Maximum throttle when the car AI can drive straight ahead
-    private float m_FullThrottle = 1.15f;    // Slightly faster than the players (maximum throttle of 1.0)
+    private float m_FullThrottle = 1.0f;
 
     // Braking throttle when the car is in a brake trigger volume
     private float m_BrakeThrottle = 0.1f;
@@ -179,11 +185,17 @@ public class AIController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Make the AI feel more like a human player by giving it a random error margin
+        m_SteeringValue *= Random.Range(m_MinimumErrorMargin, m_MaximumErrorMargin);
+
         // The steering value is in the -1 to 1 range, this is not usable for the throttle Lerp below.
         // To determine whether the car steers a lot (close to 1), or not (close to 0), the absolute value is needed.
         // Throttle is determined by the steering value, if the car barely has to steer, we can assume it is on a fairly
         // straight stretch of the track...
         float throttle = Mathf.Lerp(m_FullThrottle, m_BrakeThrottle, Mathf.Abs(m_SteeringValue));
+
+        // Make the AI feel more like a human player by giving it a random error margin
+        throttle *= Random.Range(m_MinimumErrorMargin, m_MaximumErrorMargin);
 
         // Apply throttle
         m_CarSuspension.Drive(throttle);
