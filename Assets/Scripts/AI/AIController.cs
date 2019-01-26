@@ -42,9 +42,6 @@ public class AIController : MonoBehaviour
     // Whether the player is alive or not
     private bool m_IsAlive = true;
 
-    // Whether the player should be braking or not
-    private bool m_IsBraking = false;
-
     // Object that contains the ideal racing line way points
     private Transform m_WaypointContainer = null;
 
@@ -178,12 +175,6 @@ public class AIController : MonoBehaviour
         // Reached the end of the sub track
         if (m_NestedTrackWaypointIndex > node.childCount - 1)
             ++m_MainTrackWaypointIndex;
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag(m_BrakeVolumeTag))
-            m_IsBraking = true;
     }
 
     private void FixedUpdate()
