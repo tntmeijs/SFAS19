@@ -12,6 +12,9 @@ public class AIController : MonoBehaviour
     // Tag that indicates the start of the pit lane after this node
     private string m_PitSplitTag = "PitSplit";
 
+    // Tag that indicated a brake volume
+    private string m_BrakeVolumeTag = "BrakeZone";
+
     // Choice when the track splits
     private int m_SplitChoice = -1;
 
@@ -21,27 +24,39 @@ public class AIController : MonoBehaviour
     // way point index for the nested way points (splits, pit lane, etc.)
     private int m_NestedTrackWaypointIndex = 0;
 
+    // Make the AI feel more human by giving it a random error margin
+    // It is important to keep these numbers close to 1, because the throttle and steering values will be multiplied
+    // by a random value between the minimum and the maximum.
+    private float m_MinimumErrorMargin = 0.9f;
+    private float m_MaximumErrorMargin = 1.1f;
+
     // Enter the pit lane whenever the health of the car falls below this threshold (percentage)
     private float m_PitLaneHealthThreshold = 0.2f;
 
     // When the car gets this close to the current way point, the way point system advanced the index by one
     private float m_NextWaypointSelectionDistance = 8.0f;
 
+    // Maximum throttle when the car AI can drive straight ahead
+    private float m_FullThrottle = 1.0f;
+
+    // Braking throttle when the car is in a brake trigger volume
+    private float m_BrakeThrottle = 0.1f;
+
     // Steering value passed to the suspension script (between -1 and 1)
-    float m_SteeringValue = 0.0f;
+    private float m_SteeringValue = 0.0f;
 
     // Whether the player is alive or not
     private bool m_IsAlive = true;
 
     // Object that contains the ideal racing line way points
-    Transform m_WaypointContainer = null;
+    private Transform m_WaypointContainer = null;
 
     // Script that allows the car to drive
-    CarSuspension m_CarSuspension = null;
+    private CarSuspension m_CarSuspension = null;
 
     // Health of the player
-    Health m_Health = null;
-
+    private Health m_Health = null;
+    
     // More human-readble version of a 0 == false and 1 == true choice down below
     enum TrackSplitOptions
     {
@@ -170,8 +185,22 @@ public class AIController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // #TODO: Add brake zones and "smart" throttling
-        m_CarSuspension.Drive(0.5f);
+        // Make the AI feel more like a human player by giving it a random error margin
+        m_SteeringValue *= Random.Range(m_MinimumErrorMargin, m_MaximumErrorMargin);
+
+        // The steering value is in the -1 to 1 range, this is not usable for the throttle Lerp below.
+        // To determine whether the car steers a lot (close to 1), or not (close to 0), the absolute value is needed.
+        // Throttle is determined by the steering value, if the car barely has to steer, we can assume it is on a fairly
+        // straight stretch of the track...
+        float throttle = Mathf.Lerp(m_FullThrottle, m_BrakeThrottle, Mathf.Abs(m_SteeringValue));
+
+        // Make the AI feel more like a human player by giving it a random error margin
+        throttle *= Random.Range(m_MinimumErrorMargin, m_MaximumErrorMargin);
+
+        // Apply throttle
+        m_CarSuspension.Drive(throttle);
+
+        // Apply steering towards the next way point
         m_CarSuspension.Steer(m_SteeringValue);
     }
 }
