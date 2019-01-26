@@ -4,23 +4,45 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
+    // --------------------------------------------------------------
+
+    // Offset of the camera relative to the car
+    private Vector3 m_CameraOffset = Vector3.zero;
+
     // The Camera Target
-    [SerializeField]
-    Transform m_PlayerTransform;
+    private Transform m_PlayerTransform;
 
-    // The Z Distance from the Camera Target
-    [SerializeField]
-    float m_CameraDistanceZ = 15.0f;
+    // Time it takes to move to the target position
+    private float m_MovementInterpolationSpeed;
 
-    // Use this for initialization
-    void Start ()
+    // --------------------------------------------------------------
+
+    // Directly set the camera follow target
+    public void SetTargetTransform(Transform target)
     {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
+        m_PlayerTransform = target;
+    }
+
+    // Directly set the camera offset
+    public void SetCameraTargetOffset(Vector3 offset)
     {
-        transform.position = new Vector3(m_PlayerTransform.position.x, transform.position.y, m_PlayerTransform.position.z - m_CameraDistanceZ);
-	}
+        m_CameraOffset = offset;
+    }
+
+    public void SetCameraMovementInterpolationSpeed(float speed)
+    {
+        m_MovementInterpolationSpeed = speed;
+    }
+
+    // --------------------------------------------------------------
+
+    // Camera updates are handled here to ensure that all movement for this frame has been done already
+    private void LateUpdate()
+    {
+        // Smoothly follow the car
+        transform.position = Vector3.Lerp(transform.position, m_PlayerTransform.TransformPoint(m_CameraOffset), Time.deltaTime * m_MovementInterpolationSpeed);
+
+        // Keep the camera pointed to the car
+        transform.LookAt(m_PlayerTransform);
+    }
 }
