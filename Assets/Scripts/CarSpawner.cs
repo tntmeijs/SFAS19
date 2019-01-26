@@ -90,9 +90,36 @@ public class CarSpawner : MonoBehaviour
         // The script responsible for creating the cameras
         CameraCreator cameraCreator = GetComponent<CameraCreator>();
 
-        // TODO: Make this configurable!
-        // Create the split-screen camera set-up
-        cameraCreator.CreateSplitScreenSetup(CameraCreator.SplitStyle.SingleCamera);
+        // Find the number of players (real players, not AI)
+        int playerCount = 0;
+        for (int playerIndex = 0; playerIndex < Global.MaximumNumberOfPlayers; ++playerIndex)
+        {
+            if (InputManager.instance.GetInputDataForPlayer((Global.Player)playerIndex).controller != Global.Controllers.None)
+                ++playerCount;
+        }
+
+        // Determine which ranges from the camera split configuration enum are valid
+        switch (playerCount)
+        {
+            case 1:
+                cameraCreator.CreateSplitScreenSetup(CameraCreator.SplitStyle.SingleCamera);
+                break;
+
+            case 2:
+                cameraCreator.CreateSplitScreenSetup(CameraCreator.SplitStyle.DoubleCameraHorizontal);
+                break;
+
+            case 3:
+                cameraCreator.CreateSplitScreenSetup(CameraCreator.SplitStyle.TripleCameraTop);
+                break;
+
+            case 4:
+                cameraCreator.CreateSplitScreenSetup(CameraCreator.SplitStyle.QuadCamera);
+                break;
+
+            default:
+                break;
+        }
 
         for (int playerIndex = 0; playerIndex < Global.MaximumNumberOfPlayers; ++playerIndex)
         {
