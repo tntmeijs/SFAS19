@@ -31,10 +31,10 @@ public class AIController : MonoBehaviour
     private float m_NextWaypointSelectionDistance = 8.0f;
 
     // Maximum throttle when the car AI can drive straight ahead
-    private float m_FullThrottle = 1.0f;
+    private float m_FullThrottle = 1.15f;    // Slightly faster than the players (maximum throttle of 1.0)
 
     // Braking throttle when the car is in a brake trigger volume
-    private float m_BrakeThrottle = 0.4f;
+    private float m_BrakeThrottle = 0.1f;
 
     // Steering value passed to the suspension script (between -1 and 1)
     private float m_SteeringValue = 0.0f;
@@ -188,13 +188,11 @@ public class AIController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // The steering value is in the -1 to 1 range, this is not usable for the throttle Lerp below, this is why
-        // the range needs to be converted to a 0 to 1 range.
-        float steerValueForLerp = ((m_SteeringValue + 2.0f) - 1.0f) * 0.5f;
-
+        // The steering value is in the -1 to 1 range, this is not usable for the throttle Lerp below.
+        // To determine whether the car steers a lot (close to 1), or not (close to 0), the absolute value is needed.
         // Throttle is determined by the steering value, if the car barely has to steer, we can assume it is on a fairly
         // straight stretch of the track...
-        float throttle = Mathf.Lerp(m_FullThrottle, m_BrakeThrottle, steerValueForLerp);
+        float throttle = Mathf.Lerp(m_FullThrottle, m_BrakeThrottle, Mathf.Abs(m_SteeringValue));
 
         // Apply throttle
         m_CarSuspension.Drive(throttle);
