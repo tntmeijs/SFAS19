@@ -214,5 +214,8 @@ public class LapTracker : MonoBehaviour
 
         // Go to the main menu (assume it is always the first scene in the build order)
         SceneManager.LoadScene(0);
+
+        // Destroy the input manager to avoid a bug where the controller mapping in the main menu breaks
+        Destroy(InputManager.instance.gameObject);
     }
 }

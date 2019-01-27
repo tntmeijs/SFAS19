@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 
 [RequireComponent(typeof(CameraCreator))]
@@ -17,10 +16,6 @@ public class CarSpawner : MonoBehaviour
     // Container for the ideal racing line waypoints
     [SerializeField]
     private Transform m_WaypointContainer = null;
-
-    // State machine controller that defines AI behavior
-    [SerializeField]
-    private AnimatorController m_AIStateMachineController;
 
     // Transforms where cars should be spawned in a level
     [SerializeField]
@@ -75,8 +70,7 @@ public class CarSpawner : MonoBehaviour
                 failed = true;
         }
 
-        if (!m_AIStateMachineController ||
-            !m_WaypointContainer)
+        if (!m_WaypointContainer)
             failed = true;
 
         if (failed)
@@ -148,10 +142,6 @@ public class CarSpawner : MonoBehaviour
                 // AI player needs an AI controller
                 var aiController = car.AddComponent<AIController>();
                 aiController.SetWaypointContainer(m_WaypointContainer);
-
-                // AI players are controlled by state machines, add an Animator as the state machine controller
-                var animator = car.AddComponent<Animator>();
-                animator.runtimeAnimatorController = m_AIStateMachineController;
             }
         }
     }
