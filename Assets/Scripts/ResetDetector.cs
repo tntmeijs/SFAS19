@@ -11,6 +11,10 @@ public class ResetDetector : MonoBehaviour
     [SerializeField]
     private float m_CheckDelay = 5.0f;
 
+    // Offset in the air when resetting the car (avoids clipping through the ground)
+    [SerializeField]
+    private float m_ResetHeight = 2.0f;
+
     // --------------------------------------------------------------
 
     // Object that contains the ideal racing line way points
@@ -42,16 +46,16 @@ public class ResetDetector : MonoBehaviour
 
     private bool CarShouldBeReset()
     {
-        // If the angle of the car with the ground is greater than 135 degrees, assume it is upside-down
-        return Vector3.Dot(transform.up, Vector3.down) > 0.7071f;
+        // Car is slightly angled towards the ground, assume it is upside-down
+        return Vector3.Dot(transform.up, Vector3.down) > 0.1f;
     }
 
     private void ResetVehicle()
     {
         // Find the closest node in the way point system
-        AIController aIController = GetComponent<AIController>();
+        AIController aiController = GetComponent<AIController>();
 
-        if (!aIController)
+        if (!aiController)
         {
             // By default, the closest node is the start node
             int closestNodeIndex = 0;
@@ -73,13 +77,22 @@ public class ResetDetector : MonoBehaviour
                 }
             }
 
-            // Place the car back on track
-            transform.position = m_WaypointContainer.GetChild(closestNodeIndex).position + Vector3.up;
-            transform.rotation = Quaternion.identity;
+            // Place the car back on track (sligtly in the air to avoid clipping through the ground)
+            transform.position = m_WaypointContainer.GetChild(closestNodeIndex).position + (Vector3.up * m_ResetHeight);
         }
         else
         {
             // This is an AI player, so use the node data in the AI controller to place it back on track
+            transform.position = aiController.GetCurrentWaypoint().position;
         }
+
+        // Save the old forward vector
+        Vector3 oldForward = transform.forward;
+
+        // Reset the rotation
+        transform.rotation = Quaternion.identity;
+
+        // Restore the orientation before the rotation reset occurred
+        transform.forward = oldForward;
     }
 }
