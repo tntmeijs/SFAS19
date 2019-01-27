@@ -1,0 +1,321 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>TaharMeijsDocumentationSFAS-RS</title><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color:#ffffff; --text-color:#333333; --select-text-bg-color:#B5D6FC; --select-text-font-color:auto; --monospace:"Lucida Console",Consolas,"Courier",monospace; }
+html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; }
+iframe { margin: auto; }
+a.url { word-break: break-all; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; word-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 40px; }
+#write.first-line-indent p { text-indent: 2em; }
+#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
+#write.first-line-indent li { margin-left: 2em; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
+@media screen and (max-width: 500px) {
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+#write li > figure:first-child { margin-top: -20px; }
+#write ol, #write ul { position: relative; }
+img { max-width: 100%; vertical-align: middle; }
+button, input, select, textarea { color: inherit; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+*, ::after, ::before { box-sizing: border-box; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 2; }
+p { orphans: 4; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-radius: 4px; cursor: pointer; }
+sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
+figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
+figure > table { margin: 0px !important; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 32px; }
+.CodeMirror-gutters { border-right: 0px; background-color: inherit; }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+#write pre { white-space: pre-wrap; }
+#write.fences-no-line-wrapping pre { white-space: pre; }
+#write pre.ty-contain-cm { white-space: normal; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: inherit; position: relative !important; }
+.md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+#write .md-fences.mock-cm { white-space: pre-wrap; }
+.md-fences.md-fences-with-lineno { padding-left: 0px; }
+#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
+.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
+.CodeMirror-line, twitterwidget { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
+.footnotes + .footnotes { margin-top: 0px; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: 0px 0px; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li .mathjax-block, li p { margin: 0.5rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child, li > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
+#write .footnote-line { white-space: pre-wrap; }
+@media print {
+  body, html { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; }
+  #write { margin-top: 0px; padding-top: 0px; border-color: transparent !important; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  html.blink-to-pdf { font-size: 13px; }
+  .typora-export #write { padding-left: 32px; padding-right: 32px; padding-bottom: 0px; break-after: avoid; }
+  .typora-export #write::after { height: 0px; }
+  @page { margin: 20mm 0px; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
+p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
+p > .md-image:only-child { display: inline-block; width: 100%; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.md-math-block { width: 100%; }
+.md-math-block:not(:empty)::after { display: none; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus { outline: 0px; box-shadow: none; }
+.md-task-list-item { position: relative; list-style-type: none; }
+.task-list-item.md-task-list-item { padding-left: 0px; }
+.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); }
+.md-toc-item a { text-decoration: none; }
+.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) {
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+code, pre, samp, tt { font-family: var(--monospace); }
+kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: var(--monospace); }
+code { text-align: left; vertical-align: initial; }
+a.md-print-anchor { white-space: pre !important; border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; background: 0px 0px !important; text-decoration: initial !important; text-shadow: initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.html-for-mac .inline-math-svg .MathJax_SVG { vertical-align: 0.2px; }
+.md-math-block .MathJax_SVG_Display { text-align: center; margin: 0px; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; overflow-y: hidden; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: var(--monospace); }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: 400; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG * { transition: none; }
+.MathJax_SVG_Display svg { vertical-align: middle !important; margin-bottom: 0px !important; }
+.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
+.md-diagram-panel > svg { max-width: 100%; }
+[lang="mermaid"] svg, [lang="flow"] svg { max-width: 100%; }
+[lang="mermaid"] .node text { font-size: 1rem; }
+table tr th { border-bottom: 0px; }
+video { max-width: 100%; display: block; margin: 0px auto; }
+iframe { max-width: 100%; width: 100%; border: none; }
+.highlight td, .highlight tr { border: 0px; }
+
+
+.CodeMirror { height: auto; }
+.CodeMirror.cm-s-inner { background: inherit; }
+.CodeMirror-scroll { overflow-y: hidden; overflow-x: auto; z-index: 3; }
+.CodeMirror-gutter-filler, .CodeMirror-scrollbar-filler { background-color: rgb(255, 255, 255); }
+.CodeMirror-gutters { border-right: 1px solid rgb(221, 221, 221); background: inherit; white-space: nowrap; }
+.CodeMirror-linenumber { padding: 0px 3px 0px 5px; text-align: right; color: rgb(153, 153, 153); }
+.cm-s-inner .cm-keyword { color: rgb(119, 0, 136); }
+.cm-s-inner .cm-atom, .cm-s-inner.cm-atom { color: rgb(34, 17, 153); }
+.cm-s-inner .cm-number { color: rgb(17, 102, 68); }
+.cm-s-inner .cm-def { color: rgb(0, 0, 255); }
+.cm-s-inner .cm-variable { color: rgb(0, 0, 0); }
+.cm-s-inner .cm-variable-2 { color: rgb(0, 85, 170); }
+.cm-s-inner .cm-variable-3 { color: rgb(0, 136, 85); }
+.cm-s-inner .cm-string { color: rgb(170, 17, 17); }
+.cm-s-inner .cm-property { color: rgb(0, 0, 0); }
+.cm-s-inner .cm-operator { color: rgb(152, 26, 26); }
+.cm-s-inner .cm-comment, .cm-s-inner.cm-comment { color: rgb(170, 85, 0); }
+.cm-s-inner .cm-string-2 { color: rgb(255, 85, 0); }
+.cm-s-inner .cm-meta { color: rgb(85, 85, 85); }
+.cm-s-inner .cm-qualifier { color: rgb(85, 85, 85); }
+.cm-s-inner .cm-builtin { color: rgb(51, 0, 170); }
+.cm-s-inner .cm-bracket { color: rgb(153, 153, 119); }
+.cm-s-inner .cm-tag { color: rgb(17, 119, 0); }
+.cm-s-inner .cm-attribute { color: rgb(0, 0, 204); }
+.cm-s-inner .cm-header, .cm-s-inner.cm-header { color: rgb(0, 0, 255); }
+.cm-s-inner .cm-quote, .cm-s-inner.cm-quote { color: rgb(0, 153, 0); }
+.cm-s-inner .cm-hr, .cm-s-inner.cm-hr { color: rgb(153, 153, 153); }
+.cm-s-inner .cm-link, .cm-s-inner.cm-link { color: rgb(0, 0, 204); }
+.cm-negative { color: rgb(221, 68, 68); }
+.cm-positive { color: rgb(34, 153, 34); }
+.cm-header, .cm-strong { font-weight: 700; }
+.cm-del { text-decoration: line-through; }
+.cm-em { font-style: italic; }
+.cm-link { text-decoration: underline; }
+.cm-error { color: red; }
+.cm-invalidchar { color: red; }
+.cm-constant { color: rgb(38, 139, 210); }
+.cm-defined { color: rgb(181, 137, 0); }
+div.CodeMirror span.CodeMirror-matchingbracket { color: rgb(0, 255, 0); }
+div.CodeMirror span.CodeMirror-nonmatchingbracket { color: rgb(255, 34, 34); }
+.cm-s-inner .CodeMirror-activeline-background { background: inherit; }
+.CodeMirror { position: relative; overflow: hidden; }
+.CodeMirror-scroll { height: 100%; outline: 0px; position: relative; box-sizing: content-box; background: inherit; }
+.CodeMirror-sizer { position: relative; }
+.CodeMirror-gutter-filler, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-vscrollbar { position: absolute; z-index: 6; display: none; }
+.CodeMirror-vscrollbar { right: 0px; top: 0px; overflow: hidden; }
+.CodeMirror-hscrollbar { bottom: 0px; left: 0px; overflow: hidden; }
+.CodeMirror-scrollbar-filler { right: 0px; bottom: 0px; }
+.CodeMirror-gutter-filler { left: 0px; bottom: 0px; }
+.CodeMirror-gutters { position: absolute; left: 0px; top: 0px; padding-bottom: 30px; z-index: 3; }
+.CodeMirror-gutter { white-space: normal; height: 100%; box-sizing: content-box; padding-bottom: 30px; margin-bottom: -32px; display: inline-block; }
+.CodeMirror-gutter-wrapper { position: absolute; z-index: 4; background: 0px 0px !important; border: none !important; }
+.CodeMirror-gutter-background { position: absolute; top: 0px; bottom: 0px; z-index: 4; }
+.CodeMirror-gutter-elt { position: absolute; cursor: default; z-index: 4; }
+.CodeMirror-lines { cursor: text; }
+.CodeMirror pre { border-radius: 0px; border-width: 0px; background: 0px 0px; font-family: inherit; font-size: inherit; margin: 0px; white-space: pre; word-wrap: normal; color: inherit; z-index: 2; position: relative; overflow: visible; }
+.CodeMirror-wrap pre { word-wrap: break-word; white-space: pre-wrap; word-break: normal; }
+.CodeMirror-code pre { border-right: 30px solid transparent; width: fit-content; }
+.CodeMirror-wrap .CodeMirror-code pre { border-right: none; width: auto; }
+.CodeMirror-linebackground { position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 0; }
+.CodeMirror-linewidget { position: relative; z-index: 2; overflow: auto; }
+.CodeMirror-wrap .CodeMirror-scroll { overflow-x: hidden; }
+.CodeMirror-measure { position: absolute; width: 100%; height: 0px; overflow: hidden; visibility: hidden; }
+.CodeMirror-measure pre { position: static; }
+.CodeMirror div.CodeMirror-cursor { position: absolute; visibility: hidden; border-right: none; width: 0px; }
+.CodeMirror div.CodeMirror-cursor { visibility: hidden; }
+.CodeMirror-focused div.CodeMirror-cursor { visibility: inherit; }
+.cm-searching { background: rgba(255, 255, 0, 0.4); }
+@media print {
+  .CodeMirror div.CodeMirror-cursor { visibility: hidden; }
+}
+
+
+:root { --side-bar-bg-color: #fff; --control-text-color: #777; }
+html { font-size: 16px; }
+body { color: rgb(52, 73, 94); -webkit-font-smoothing: antialiased; line-height: 1.6rem; letter-spacing: 0px; margin: 0px; overflow-x: hidden; font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif !important; }
+#write { max-width: 860px; margin: 0px auto; padding: 20px 30px 100px; }
+#write p { line-height: 1.6rem; word-spacing: 0.05rem; }
+#write ol li { text-indent: 0.5rem; }
+#write > ul:first-child, #write > ol:first-child { margin-top: 30px; }
+body > :first-child { margin-top: 0px !important; }
+body > :last-child { margin-bottom: 0px !important; }
+a { color: rgb(66, 185, 131); font-weight: 600; padding: 0px 2px; text-decoration: none; }
+h1, h2, h3, h4, h5, h6 { position: relative; margin-top: 1rem; margin-bottom: 1rem; font-weight: bold; line-height: 1.4; cursor: text; }
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor { text-decoration: none; }
+h1 tt, h1 code { font-size: inherit !important; }
+h2 tt, h2 code { font-size: inherit !important; }
+h3 tt, h3 code { font-size: inherit !important; }
+h4 tt, h4 code { font-size: inherit !important; }
+h5 tt, h5 code { font-size: inherit !important; }
+h6 tt, h6 code { font-size: inherit !important; }
+h2 a, h3 a { color: rgb(52, 73, 94); }
+h3 a::before { content: "#"; color: rgb(66, 185, 131); position: absolute; left: -0.7em; margin-top: -0.05em; padding-right: 0.5em; font-size: 1.2em; line-height: 1; font-weight: bold; }
+h1 { padding-bottom: 0.4rem; font-size: 2.2rem; line-height: 1.3; }
+h2 { font-size: 1.75rem; line-height: 1.225; margin: 35px 0px 15px; padding-bottom: 0.5em; border-bottom: 1px solid rgb(221, 221, 221); }
+h3 { font-size: 1.4rem; line-height: 1.43; margin: 20px 0px 7px; }
+h4 { font-size: 1.2rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 1rem; color: rgb(119, 119, 119); }
+p, blockquote, ul, ol, dl, table { margin: 0.8em 0px; }
+li > ol, li > ul { margin: 0px; }
+hr { height: 2px; padding: 0px; margin: 16px 0px; background-color: rgb(231, 231, 231); border: 0px none; overflow: hidden; box-sizing: content-box; }
+body > h2:first-child { margin-top: 0px; padding-top: 0px; }
+body > h1:first-child { margin-top: 0px; padding-top: 0px; }
+body > h1:first-child + h2 { margin-top: 0px; padding-top: 0px; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child { margin-top: 0px; padding-top: 0px; }
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 { margin-top: 0px; padding-top: 0px; }
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p { margin-top: 0px; }
+li p.first { display: inline-block; }
+ul, ol { padding-left: 30px; }
+ul:first-child, ol:first-child { margin-top: 0px; }
+ul:last-child, ol:last-child { margin-bottom: 0px; }
+blockquote { border-left: 4px solid rgb(66, 185, 131); padding: 10px 15px; color: rgb(119, 119, 119); background-color: rgba(66, 185, 131, 0.1); }
+table { padding: 0px; word-break: initial; }
+table tr { border-top: 1px solid rgb(223, 226, 229); margin: 0px; padding: 0px; }
+table tr:nth-child(2n), thead { background-color: rgb(250, 250, 250); }
+table tr th { font-weight: bold; border-width: 1px 1px 0px; border-top-style: solid; border-right-style: solid; border-left-style: solid; border-top-color: rgb(223, 226, 229); border-right-color: rgb(223, 226, 229); border-left-color: rgb(223, 226, 229); border-image: initial; border-bottom-style: initial; border-bottom-color: initial; text-align: left; margin: 0px; padding: 6px 13px; }
+table tr td { border: 1px solid rgb(223, 226, 229); text-align: left; margin: 0px; padding: 6px 13px; }
+table tr th:first-child, table tr td:first-child { margin-top: 0px; }
+table tr th:last-child, table tr td:last-child { margin-bottom: 0px; }
+#write strong { padding: 0px 1px; }
+#write em { padding: 0px 5px 0px 2px; }
+#write table thead th { background-color: rgb(242, 242, 242); }
+#write .CodeMirror-gutters { border-right: none; }
+#write .md-fences { border: 1px solid rgb(244, 244, 244); -webkit-font-smoothing: initial; line-height: 1.43rem; border-radius: 2px; font-size: 0.85rem; word-wrap: normal; margin: 0.8rem 0px !important; padding: 0.3rem 0px !important; background-color: rgb(248, 248, 248) !important; font-family: "Roboto Mono", "Source Sans Pro", Monaco, courier, monospace !important; }
+#write .CodeMirror-wrap .CodeMirror-code pre { padding-left: 12px; }
+#write code, tt { margin: 0px 2px; padding: 2px 4px; border-radius: 2px; font-size: 0.92rem; color: rgb(233, 105, 0); background-color: rgb(248, 248, 248); font-family: "Roboto Mono", "Source Sans Pro", Monaco, courier, monospace !important; }
+#write .md-footnote { background-color: rgb(248, 248, 248); color: rgb(233, 105, 0); }
+#write mark { background-color: rgb(235, 255, 235); border-radius: 2px; padding: 2px 4px; margin: 0px 2px; color: rgb(34, 34, 34); font-weight: 500; }
+#write del { padding: 1px 2px; }
+.cm-s-inner .cm-link, .cm-s-inner.cm-link { color: rgb(34, 162, 201); }
+.cm-s-inner .cm-string { color: rgb(34, 162, 201); }
+.md-task-list-item > input { margin-left: -1.3em; }
+@media print {
+  html { font-size: 13px; }
+  h1 { break-before: page; }
+  h1:first-of-type { break-before: avoid; }
+  table, pre { break-inside: avoid; }
+  pre { word-wrap: break-word; }
+}
+.md-fences { background-color: rgb(248, 248, 248); }
+#write pre.md-meta-block { padding: 1rem; font-size: 85%; line-height: 1.45; background-color: rgb(247, 247, 247); border: 0px; border-radius: 3px; color: rgb(119, 119, 119); margin-top: 0px !important; }
+.mathjax-block > .code-tooltip { bottom: 0.375rem; }
+#write > h3.md-focus::before { left: -1.5625rem; top: 0.375rem; }
+#write > h4.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
+#write > h5.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
+#write > h6.md-focus::before { left: -1.5625rem; top: 0.285714rem; }
+.md-image > .md-meta { border-radius: 3px; font-family: Consolas, "Liberation Mono", Courier, monospace; padding: 2px 0px 0px 4px; font-size: 0.9em; color: inherit; }
+.md-tag { color: inherit; }
+.md-toc { margin-top: 20px; padding-bottom: 20px; }
+.sidebar-tabs { border-bottom: none; }
+#typora-quick-open { border: 1px solid rgb(221, 221, 221); background-color: rgb(248, 248, 248); }
+#typora-quick-open-item { background-color: rgb(250, 250, 250); border-color: rgb(254, 254, 254) rgb(229, 229, 229) rgb(229, 229, 229) rgb(238, 238, 238); border-style: solid; border-width: 1px; }
+#md-notification::before { top: 10px; }
+.on-focus-mode blockquote { border-left-color: rgba(85, 85, 85, 0.12); }
+header, .context-menu, .megamenu-content, footer { font-family: "Segoe UI", Arial, sans-serif; }
+.file-node-content:hover .file-node-icon, .file-node-content:hover .file-node-open-state { visibility: visible; }
+.mac-seamless-mode #typora-sidebar { background-color: var(--side-bar-bg-color); }
+.md-lang { color: rgb(180, 101, 77); }
+.html-for-mac .context-menu { --item-hover-bg-color: #E6F0FE; }
+
+
+
+
+
+ .typora-export li, .typora-export p, .typora-export,  .footnote-line {white-space: normal;} 
+</style>
+</head>
+<body class='typora-export os-windows' >
+<div  id='write'  class = 'is-node'><h1><a name='header-n0' class='md-header-anchor '></a><img src='Media/SFASLogo.png' alt='' referrerPolicy='no-referrer' /></h1><figure><table><thead><tr><th>Author</th><th>Tahar Meijs</th></tr></thead><tbody><tr><td><strong>Website</strong></td><td><strong><a href='https://taharmeijs.com'>https://taharmeijs.com</a></strong></td></tr><tr><td><strong>Project</strong> repository</td><td><strong><a href='https://bitbucket.org/tntmeijs/sfas19/src/release/'>https://bitbucket.org/tntmeijs/sfas19/src/release/</a></strong></td></tr><tr><td><strong>Competition</strong></td><td><strong>Rising Star</strong></td></tr><tr><td><strong>University</strong></td><td><strong>Breda University of Applied Sciences (BUAS)</strong></td></tr></tbody></table></figure><h1><a name='header-n18' class='md-header-anchor '></a>Table of contents</h1><ul><li><p><a href='#header-n54'>Preface</a></p><ul><li><a href='#header-n55'>About me</a></li><li><a href='#header-n58'>Motivation</a></li><li><a href='#header-n63'>Credits</a></li></ul></li><li><p><a href='#introduction'>Introduction</a></p><ul><li><p><a href='#header-n66'>Source control</a></p><ul><li><a href='#header-n68'>Branches</a></li><li><a href='#header-n80'>My workflow</a></li></ul></li><li><p><a href='#header-n94'>Game concepts</a></p><ul><li><a href='#header-n117'>Snowball fight</a></li><li><a href='#header-n121'>Skateboard paintball</a></li><li><a href='#header-n2051'>Racing game</a></li></ul></li><li><p><a href='#header-n126'>Core gameplay research</a></p><ul><li><a href='#header-n127'>Planned features</a></li></ul></li></ul></li><li><p><a href='#header-n128'>Problem solving</a></p><ul><li><a href='#header-n421'>Lack of time / motivation</a></li><li><a href='#header-n417'>Party system</a></li><li><a href='#header-n612'>Hover cars</a></li><li><a href='#header-n624'>Racing AI</a></li><li><a href='#header-n758'>Split screen camera configuration</a></li></ul></li><li><p><a href='#header-n129'>Conclusion</a></p><ul><li><a href='#header-n1481'>Post mortem</a></li><li><a href='#header-n1486'>Self-reflection</a></li><li><a href='#header-n1490'>Future development</a></li></ul></li></ul><h1><a name='header-n54' class='md-header-anchor '></a>Preface</h1><h2><a name='header-n55' class='md-header-anchor '></a>About me</h2><p>Hello there, my name is Tahar Meijs. This is the second time I am joining this competition. I gave it a shot last year, but I was unable to deliver any project due to me having to prioritize some university assignments.</p><p>This time around, I will try my best to spend some more time on the competition. But, I will always prioritize university assignments over this competition.</p><h2><a name='header-n58' class='md-header-anchor '></a>Motivation</h2><p>I wanted to join the competition all the way back in 2017, but I did not have enough programming experience / knowledge at the time. Therefore, I decided to focus completely on learning new things in university so I could come back the next year and build a proper project.</p><p>When SFAS 2018 came around, I immediately joined. Too bad I messed up the C++ HackerRank test a bit. It was not bad, but it was not good either. My score was average (or perhaps slightly below average). Once phase 2 started, I had to spend all of my time on university assignments. As a result, I was only able to work on the game for a week or so. And that showed in the quality of the work I tried to deliver. The game was boring, barely had any AI, and was not fun at all.</p><p>This year, however, I feel much more comfortable with Unity3D and C++ in general. I signed up for SFAS 19 and got started on the HackerRank test. I managed to place in the top 30 across both Search for a Star, as well as Rising Star: an insane improvement over the test results from last year!</p><p>The only thing I am worried about is whether I will have enough time to work on the project. I am generally pretty bad at estimating tasks and planning my work accordingly. In addition to that, I also have to work on my university assignments, which take up around 30 hours a week. Add the commute from home to university to that and you will be looking at 60 to 80 hours a week spent on university-related things. This will leave me with very little time to work on the competition. Nevertheless, I will do my best to deliver a project by the end of January.</p><h2><a name='header-n63' class='md-header-anchor '></a>Credits</h2><p>Almost all of the art assets are made by <a href='https://kenney.nl'>Kenney</a>.</p><p>For a more detailed list of the packages used in this project, please refer to the README.md file in the project folder.</p><h1><a name='header-n66' class='md-header-anchor '></a>Source control</h1><p>At the start of the project, all commits went into the main branch. This was convenient and worked quite well. However, as the project grew and became more complex, it became apparent that the project was in need of a better structure. I should have done this right at the start of the project...</p><h2><a name='header-n68' class='md-header-anchor '></a>Branches</h2><p>The project uses three branches (from most stable to least stable):</p><ul><li>Release: contains the latest <strong>stable releases</strong>, does not update frequently.</li><li>Features: whenever the <strong>development</strong> branch is somewhat stable, this branch is updated.</li><li>Development: <strong>brand new features</strong> are pushed to this branch.</li><li>Feature_XXX: <strong>new features</strong> are implemented on branches originating from <strong>development</strong>. Highly unstable!</li></ul><p><img src='Media/Branches.png' alt='' referrerPolicy='no-referrer' /></p><h2><a name='header-n80' class='md-header-anchor '></a>My workflow</h2><ol start='' ><li>Clone the project to my local drive.</li><li>Pull latest changes.</li><li>Create a branch on the <strong>development</strong> branch named the same as the feature that will be added to the project.</li><li>Once the feature works as intended, it is merged into the <strong>development</strong> branch.</li><li>The <strong>development</strong> branch is <strong>merged</strong> into the <strong>features</strong> branch once the feature works properly.</li><li>The changes on <strong>features</strong> are pushed to <strong>release</strong> as soon as the build is stable and has enough features to consider it a big addition the game.</li></ol><h1><a name='header-n94' class='md-header-anchor '></a>Game concepts</h1><p>At the start of the competition, I spent quite a bit of time doodling in a digital sketchbook to try and come up with a decent concept. The <strong>time-lapse</strong> I made during the development cycle of this project showcases some of the early brainstorming and concepting phase.</p><p>I started out by writing down the core concepts of the base project:</p><figure><table><thead><tr><th><strong>Third-person shooter</strong></th><th><strong>Ammunition / pick-ups</strong></th><th><strong>Enemies can push the player</strong></th></tr></thead><tbody><tr><td><strong>Three-dimensional gameplay</strong></td><td><strong>Different enemy types</strong></td><td><strong>Various weapons</strong></td></tr></tbody></table></figure><p>My first ideas were quite cool, but also a bit too difficult to pull off within the time I have for this project. The following ideas were the best ones I had at the time:</p><figure><table><thead><tr><th>Single-player snowball fight</th><th><strong>Bullet volleyball</strong></th><th><strong>Stealth / spy game</strong></th></tr></thead><tbody><tr><td><strong>Titanfall 2-like parkour shooter</strong></td><td><strong>Turn-based tactical shooter</strong></td><td><strong>Action movie slow-motion bullet hell</strong></td></tr></tbody></table></figure><p>I ended up really liking the snowball throwing game, so I went with that idea.</p><h2><a name='header-n117' class='md-header-anchor '></a>Snowball fight</h2><p>However, after some time, I found out that the game was not fun at all! In fact, the game was really boring. This caused me to lose motivation and made me think about dropping out of the competition. At that point, I only had around 1 month left. I could try and turn this mess into a fun game, but I could not see that happening any time soon. The only cool thing that made me want to continue the project was the snow shader I created, based on the distance-based tessellation shader used in Rise of the Tomb Raider.</p><p><img src='Media/dynamic_snow_mesh_throwing_balls.gif' alt='' referrerPolicy='no-referrer' /></p><p>I was quite happy with this result, but there was no game at all... So, I decided to try and come up with a new concept, one that would be more fun and less of a technology show-off.</p><h2><a name='header-n121' class='md-header-anchor '></a>Skateboard paintball</h2><p>After a while, I stumbled upon some really cool posts on Twitter about a skateboarding game. It looked like a lot of fun and a great way to turn this project of mine into a real game. At the point, I had learned how to model and rig basic things in Blender, so I was also planning on making some new art for the skateboarding game.</p><p>I spent way too much time fiddling around with the models, ramps, and other things in Blender. It was a lot of fun, but it did not help me progress at all! And to make things even worse, after jumping into the code, I discovered that a skateboarding game was quite tough to build. In fact, it is really difficult to make the board behave nicely with the game world. Add in more complex obstacles and tricks, and you will suddenly find yourself being unable to make it all work in such a short period of time...</p><p><img src='Media/bye_bye.gif' alt='' referrerPolicy='no-referrer' /></p><div style="page-break-after: always;"></div> <!-- Force a page break here --><h2><a name='header-n2051' class='md-header-anchor '></a>Racing game</h2><p>I briefly tried to create a game where you would play mini-golf using a racing car, but I quickly found out that the AI would be really difficult to get right. The time-lapse on the project page will show some of the prototyping I did.</p><p>After failing to make some good progress on all the other concepts, I decided to throw away all the cool and original content and just build a racing game. That would be my submission, a game where you race 3 laps and try to come in first place. This is the project that I ended up submitting for the competition. In a later chapter, I will cover some of the difficulties I faced, the challenges I had to overcome, and reflect on the final result.</p><p><img src='Media/HoverCarExplosion.gif' alt='' referrerPolicy='no-referrer' /></p><h1><a name='header-n126' class='md-header-anchor '></a>Core gameplay research</h1><p>The core gameplay in the base project was all about a (semi) top-down third-person shooter. The player was able to move around on the XZ plane, shoot with two different weapons, and kill enemies. Enemies were simple, had extremely basic AI, and would be able to push the player off the map.</p><p>The initial project with the snowball fight implemented most of the mechanics from the base project. I figured that a cool way to show-off some cool shader magic was by creating a show shader similar to the one seen in Rise of the Tomb Raider. But once I saw things coming together, it was almost as if it was a reskin of the base project with the exception of the snow deformation...</p><p>When I moved on to the paintball game, I wanted to keep the core gameplay the same, except this time the player would be able to move around in three-dimensional space using a hoverboard. The gameplay would be very similar to the project <a href='https://twitter.com/chonkurabb'>Paul (@chonkurabb)</a> is working on. I loved this gifs on Twitter, so I tried to use his game as an inspiration for mine.</p><p>Lastly, the racing concept. Due to me having to spend a great amount of time on university assignments, I decided to make the racing game as simple as possible. I did not plan any fancy features. Just a very basic Mario Kart clone in which you can drive around the track, collect power-ups, and race against AI or your friends.</p><h2><a name='header-n127' class='md-header-anchor '></a>Planned features</h2><p>The following chapter will only cover the racing game, as that is the concept I ended up &quot;developing&quot;.</p><ul><li><strong>Party system</strong>: allow players to play solo, or against their friends.</li><li><strong>Arcade car physics</strong>: use ray casts to make a car hover.</li><li><strong>Racing AI</strong>: all slots that cannot be filled by real players should be filled by AI players.</li><li><strong>Booster power-up</strong>: increase the maximum speed of a racing car for a short period of time.</li><li><strong>Missile volley power-up</strong>: fire missiles to damage the cars of other players.</li><li><strong>Pit lane repairs</strong>: when the car has taken damage, require a visit to the pit lane.</li><li><strong>Dynamic split screen detection</strong>: based on the number of players, the screen will be split in different ways.</li></ul><p>As you can see, these features are all very simple, but it should be enough to make for a simple racing game. The most difficult feature to implement will be the party system, as the current Unity input system does not work nicely for those kind of things. Because the project used Unity 2018.2, I decided to stick with it. But in my own projects, I would have used the beta version of Unity in combination with their new <a href='https://github.com/Unity-Technologies/InputSystem'>input system</a>.</p><h1><a name='header-n128' class='md-header-anchor '></a>Problem solving</h1><p>This section of the document will cover some of the challenges I had to overcome while developing this game. I will not cover every system in-depth, but I will try to give you a good impression of how I (tried to) solved the problems at hand.</p><h2><a name='header-n421' class='md-header-anchor '></a>Lack of time / motivation</h2><p>When I started with this competition, I made sure to spend some time on the project during the weekends. But, as the project I am working on at university matured and became more complex, I started having to spend my weekends on that instead. As a result, I could not work on the project as much as I would have liked. Additionally, I could only work on the game every 5 days or so, which meant that it took me some time to get used to all the system, the code base, and so forth. This made it difficult for me to really focus on the things that needed to be done. As a result, I slowly lost motivation to work on the project. I really wanted to work on it, but I simply could not bring myself to work on it every week. A few weeks went by where I barely had any time to work on any other projects than the university assignments.</p><p>Eventually, I made sure to start do at least a little bit of work during the weekends whenever I could. This allowed me to make a bit of progress every week. It eventually resulted in the game I submitted for this competition. I did not manage to finish every feature in-time, or polish it. But I tried to deliver a working project / game.</p><p>In hindsight, I should have really done a better job during preproduction. My initial idea sounded like fun, but it was not. If I would have spent some more time on the core gameplay, I could have prevented having to start over near the end of the competition. But, I do think that the current state of the project is way better now than it would have been if I decided to stick with the original concept.</p><h2><a name='header-n417' class='md-header-anchor '></a>Party system</h2><p>The first big issue I encountered when I started working on the game was that I would need some kind of party system. While this is not extremely difficult per se, it is fairly tricky to get it to work within Unity. See, Unity does not come with a nice input manager. The input bindings and the like for analog sticks is done via the input manager menu, which is based on hard-coded strings. I tried to build a somewhat abstracted input manager as a replacement for the default Unity input system, but I could not get rid of the Unity system entirely. I needed it for the analog readings from the axes on the joysticks.</p><p>I will not cover any of the code, because it would be useless to try to cover all of it in this document. Please have a look at the source code instead. This input system for a local party game is a bit complex, but it works really well. Players can join and leave the party, while the in-game input will always assign itself automatically to the correct player object.</p><p>The image below shows the result of the party manager and input manager script in Unity:</p><p><img src='Media/PartyInputSystem.png' alt='' referrerPolicy='no-referrer' /></p><p>Using this input system, I was able to turn the input mess that is Unity&#39;s input editor, into this:</p><pre lang="cpp" class="md-fences md-end-block ty-contain-cm modeLoaded" spellcheck="false"><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang="cpp"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 12px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 0px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-comment">// Retrieve the player input data from the input manager</span></span></pre></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">Global</span>.<span class="cm-variable">PlayerInputData</span> <span class="cm-variable">inputData</span> <span class="cm-operator">=</span> <span class="cm-variable">InputManager</span>.<span class="cm-variable">instance</span>.<span class="cm-variable">GetInputDataForPlayer</span>(<span class="cm-variable">m_PlayerID</span>);</span></pre></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 44px;"></div><div class="CodeMirror-gutters" style="display: none; height: 44px;"></div></div></div></pre><p>Where the <code>m_PlayerID</code> is either <code>PLAYER_ONE</code>, <code>PLAYER_TWO</code>, <code>PLAYER_THREE</code>, or <code>PLAYER_FOUR</code>.</p><p>This system took quite some time to implement, but I am really happy that I did. Even though my game project may not be finished, I do think that I am showing that I can write fairly complex systems in a clean and structured way. This feature is the one I am most proud of.</p><h2><a name='header-n612' class='md-header-anchor '></a>Hover cars</h2><p>Unity comes with a big collection of components ready to be used in a game. One of these components is the wheel collider. This can be used to create land vehicles that drive using realistic forces.</p><p>For my racing game, I found the wheel colliders to be too difficult to work with (way too many useless features for my game), and they were not as user-friendly as I had hoped. Therefore, I decided to write a simple script that could make any object behave like a hover car.</p><p>The way this work is pretty simple, really. You create a mesh and add a collider and rigid body to it. Then, you place empty child transforms along the outer edges of the object. In my case, I used the wheel positions for this. A ray is fired downwards from every hover point transform. Every time the ray hits, it applies a force in the opposite direction. This makes the ray behave like a spring system.</p><p>The point of intersection can be used to make the wheels of the vehicle stick to the ground. This makes the hovercar look and feel much more like an actual vehicle. The wheels do not need to have any kind of collision, because their are only a visual representation of the wheels. The real work is being done by the invisible ray cast spring system.</p><p>For a really in-depth tutorial as well as sample code for a system like this, please have a look at the this blog post of mine: <a href='https://taharmeijs.com/simple-hovercar-in-unity3d/'>Simple hovercar in Unity3D</a>.</p><h2><a name='header-n624' class='md-header-anchor '></a>Racing AI</h2><p>To make the game more interesting, I had to add some kind of AI. At first I wanted the game to be local multiplayer only, but that would mean getting rid of all of the AI systems that were already part of the base project AI. Instead, I decided to spend a day or two on writing a system that allows cars to race around the tracks autonomously.</p><p>The system is pretty simple, but very effective. The designer first creates a track. Then, once all the pieces are in place, a system of waypoints needs to be added to the track. These waypoints will guide the AI towards its next position.</p><p><img src='Media/EditorRacingLikeVisualizer.png' alt='' referrerPolicy='no-referrer' /></p><p>To make it easier for myself to design tracks and add the AI racing like to it, I wrote a small tool that overlays the AI waypoint system. This allows me to add nodes and see how the AI would react to it. Without this kind of visualization, it is really difficult to debug the AI racers.</p><p>Because I wanted to support track splits and pit lanes, I had to come up with a system that allows the track to be split into two child &quot;tracks&quot;. In the image above, a cyan line is used to indicate a road that is split in two, while the red line shows the pit lane. Yellow lines are the regular track.</p><p>The AI line following algorithm is pretty simple. The AI is assigned a start node index. Then, it moves towards the node. Once the distance to the node falls below a certain threshold, the node index is advanced by one, making the AI move towards the next node. This keeps going on until either we hit the last node and the index wraps around, or we hit a special type of node. A special node is either a track split, or the pit lane entrance.</p><p>When the track splits in two (cyan line), the AI randomly decides to go either left or right. The pit lane is not random at all and uses the health system as provided by the base project. When the health of a car falls below a certain threshold, the AI tries to enter the pit lane.</p><p>I tried to build a state machine system for the AI, but due to a lack of time, I was unable to finish it. The idea was to repurpose the built-in Unity Animator system. Unity has a class named <code>StateMachineBehaviour</code>. Custom classes can derive from this class, which allows programmers to write custom state nodes for the Animator window. For this AI, I wanted to use it to influence the driving of the car by making it scan for other cars, detect power-ups, and make &quot;smart&quot; decisions such as when to go to the pit lane and when to skip it.</p><p><img src='Media/CarAnimatorStateMachine.png' alt='' referrerPolicy='no-referrer' /></p><h2><a name='header-n758' class='md-header-anchor '></a>Split screen camera configuration</h2><p>Because my game would need support for 1 to 4 players, I decided that I would need to write a simple camera creation script that would divide the viewport into multiple smaller viewports. Depending on the number of players, the game chooses a predetermined split-screen configuration.</p><p>The initial idea was to check the number of players after the party has been confirmed. Then, the game would present the players with all possible split screen configurations for their set-up and let them vote on the best one. While this idea was cool, I did not have enough time to create yet another menu scene. Instead, I just predefined some camera configurations depending on the number of players.</p><p>To create the camera viewport configuration, I wrote a little class with one public method:</p><pre lang="cpp" class="md-fences md-end-block ty-contain-cm modeLoaded" spellcheck="false"><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang="cpp"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 12px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 0px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation"><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-comment">// Create four viewports of equal size</span></span></pre></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-variable">cameraCreator</span>.<span class="cm-variable">CreateSplitScreenSetup</span>(<span class="cm-variable">CameraCreator</span>.<span class="cm-variable">SplitStyle</span>.<span class="cm-variable">QuadCamera</span>);</span></pre></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 44px;"></div><div class="CodeMirror-gutters" style="display: none; height: 44px;"></div></div></div></pre><p>The example code above splits the viewport into four smaller viewports, but there are way more configurations possible that that. I have implemented viewport configurations for these split styles:</p><pre spellcheck="false" class="md-fences md-end-block ty-contain-cm modeLoaded" lang="cpp" style="break-inside: unset;"><div class="CodeMirror cm-s-inner CodeMirror-wrap" lang="cpp"><div style="overflow: hidden; position: relative; width: 3px; height: 0px; top: 0px; left: 12px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" tabindex="0" style="position: absolute; bottom: -1em; padding: 0px; width: 1000px; height: 1em; outline: none;"></textarea></div><div class="CodeMirror-scrollbar-filler" cm-not-content="true"></div><div class="CodeMirror-gutter-filler" cm-not-content="true"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="margin-left: 0px; margin-bottom: 0px; border-right-width: 0px; padding-right: 0px; padding-bottom: 0px;"><div style="position: relative; top: 0px;"><div class="CodeMirror-lines" role="presentation"><div role="presentation" style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre><span>xxxxxxxxxx</span></pre></div><div class="CodeMirror-measure"></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code" role="presentation" style=""><div class="CodeMirror-activeline" style="position: relative;"><div class="CodeMirror-activeline-background CodeMirror-linebackground"></div><div class="CodeMirror-gutter-background CodeMirror-activeline-gutter" style="left: 0px; width: 0px;"></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"><span class="cm-keyword">public</span> <span class="cm-keyword">enum</span> <span class="cm-def">SplitStyle</span></span></pre></div><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">{</span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">Invalid</span> <span class="cm-operator">=</span> <span class="cm-operator">-</span><span class="cm-number">1</span>,</span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">SingleCamera</span>, &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="cm-comment">// Cover the complete screen using camera #1</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">DoubleCameraHorizontal</span>, <span class="cm-comment">// Two equally-sized views horizontally</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">DoubleCameraVertical</span>, &nbsp; <span class="cm-comment">// Two equally-sized views vertically</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">TripleCameraQuad</span>, &nbsp; &nbsp; &nbsp; <span class="cm-comment">// Four equally-sized views with the bottom-right tile unused</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">TripleCameraTop</span>, &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-comment">// Two equally-sized views on the top and a big view on the bottom</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">TripleCameraBottom</span>, &nbsp; &nbsp; <span class="cm-comment">// Two equally-sized views on the bottom and a big view on the top</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">TripleCameraLeft</span>, &nbsp; &nbsp; &nbsp; <span class="cm-comment">// Two equally-sized views on the left and a big view on the right</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">TripleCameraRight</span>, &nbsp; &nbsp; &nbsp;<span class="cm-comment">// Two equally-sized views on the right and a big view on the left</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">TripleCameraHorizontal</span>, <span class="cm-comment">// Three equally-sized views horizontally</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">TripleCameraVertical</span>, &nbsp; <span class="cm-comment">// Three equally-sized views vertically</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;"> &nbsp; &nbsp;<span class="cm-variable">QuadCamera</span> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="cm-comment">// Split the screen in four equally-sized views</span></span></pre><pre class=" CodeMirror-line " role="presentation"><span role="presentation" style="padding-right: 0.1px;">}</span></pre></div></div></div></div></div><div style="position: absolute; height: 0px; width: 1px; border-bottom: 0px solid transparent; top: 330px;"></div><div class="CodeMirror-gutters" style="display: none; height: 330px;"></div></div></div></pre><p>Example of a split screen configuration when <code>TripleCameraBottom</code> is used to split the viewport:</p><p><img src='Media/SplitScreenSample.png' alt='' referrerPolicy='no-referrer' /></p><h1><a name='header-n129' class='md-header-anchor '></a>Conclusion</h1><h2><a name='header-n1481' class='md-header-anchor '></a>Post mortem</h2><p>During the course of this project, I achieved quite a lot, however, there is a lot of room for improvement as well. This paragraph aims to highlight and briefly discuss the things I achieved, as well as the challenges I face while working on this project.</p><h3><a name='header-n1512' class='md-header-anchor '></a>Achievements</h3><h4><a name='header-n1516' class='md-header-anchor '></a>Advanced gameplay / tool systems</h4><p>In my day-to-day university work, I barely do any gameplay or tools programming. I am currently part of a team of programmers that work on a real-time ray-tracing library named <a href='https://github.com/teamwisp'>Wisp (link)</a>. This is mostly software engineering, so I do not have a lot of experience with gameplay systems.</p><p>Nevertheless, I do think that I did a pretty good job at writing some of the gameplay systems. Most notably the racing AI and the input system abstraction layer. Overall, I am really happy with these two things, as they were completely new to me and rather tricky to implement. I wrote them in a fairly modular way, so I should be able to reuse these systems in my future projects if I ever need similar solutions.</p><h4><a name='header-n1533' class='md-header-anchor '></a>Learning Unity3D</h4><p>As I just stated, I mainly focus on low-level things and more software engineering concepts. Even though I am enrolled in a course called &quot;International Game Architecture and Design&quot;, I only worked on gameplay systems in my first year. Every project that came after that always involved writing a custom (rendering) engine from scratch.</p><p>So, having to suddenly work with a commercial-grade engine such as Unity3D was a big difference. I had only used this engine a couple times before for some personal projects and experiments. So I already knew a bit of C#, but most of my experience is in C++. This resulted in me mixing up some language features every now and then.</p><p>Now that the SFAS competition is coming to an end, I can confidently say that I feel pretty comfortable working with Unity3D now. I will start learning more advanced features such as the scriptable render pipeline soon, because I really enjoyed working with the engine. I would love to do some more experiments and projects with this engine in the near future.</p><h4><a name='header-n1536' class='md-header-anchor '></a>Blender experience</h4><p>So this is not really related to programming, but I just wanted to say that I learned a great deal about Blender. Before I grabbed the Kenney asset packs, I tried to create my own models in Blender. This meant I had to learn how to create 3D models, texture them, and do some basic rigging.</p><p>I will probably never be a 3D modeler professionally, but I thoroughly enjoyed playing around with Blender. I learned how to build 3D models using 3D images (front, top, side view), apply textures and vertex color, rig a character, and export animations to Unity from within Blender.</p><div style="page-break-after: always;"></div> <!-- Force a page break here --><h3><a name='header-n1519' class='md-header-anchor '></a>Challenges</h3><h4><a name='header-n1528' class='md-header-anchor '></a>Working on multiple projects</h4><p>One of the most difficult things I had to do during this competition was managing two projects at the same time. For a university assignment, I have to work in a team on a year-long project. I am expected to put in 30 hours a week. But if you include commuting from home to university and the occasional lecture, it adds up to around 60 to 70 hours a week. This made it difficult for me to find the motivation to do more work outside of university work. I think I spent around 5 hours a week on this project.</p><p>I should have tried to plan my competition work and my university work better. Perhaps I should have tried to get some work for SFAS done during my morning commute...</p><h4><a name='header-n1540' class='md-header-anchor '></a>Motivation</h4><p>As a result of the lack of time (and thus, lack of progress), I did not feel as motivated as I did when I started working on the project. Do not get me wrong, I absolutely love to work on games and software in general, but once you reach that 60 or 70 hours a week spent on university assignments, it is difficult to bring yourself to start working on yet another project or assignment.</p><h4><a name='header-n1541' class='md-header-anchor '></a>Scoping</h4><p>I really over-scoped this project. Initially, I thought I would have more time to work on it, but as the project progressed and I could not spend as much time working on the game, I did not reduce scope. I should have re-scoped the project earlier. Perhaps it would have allowed me to finish it completely.</p><h2><a name='header-n1486' class='md-header-anchor '></a>Self-reflection</h2><p>I think I did a pretty good job at working towards the final goal. I used planning software such as Hack &#39;n Plan, made design sketches, added a timeline, and more... The quality of my work was pretty good and the code was fairly clean and well structured.</p><p>But, you can only do so much in a few weeks. In hindsight, I should have continued with my original concept. It would have probably resulted in a boring game, but I would at least have a proper game. Now I have a half-finished prototype.</p><h2><a name='header-n1490' class='md-header-anchor '></a>Future development</h2><p>Although I highly doubt I will continue with this project, I may grab some of the assets and release them as stand-alone asset packs. The game project itself will probably be abandoned after this competition is over. As much as I would have liked to continue with it, I simply do not see this game becoming fun any time soon. I have lots of new ideas for interesting games thanks to this competitions, so stay tuned for that!</p></div>
+</body>
+</html>
