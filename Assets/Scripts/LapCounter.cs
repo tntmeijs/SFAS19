@@ -13,7 +13,7 @@ public class LapCounter : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    public delegate void CarPassesLapCounterVolume(Global.Player playerID);
+    public delegate void CarPassesLapCounterVolume(Global.Player playerID, GameObject car);
     public CarPassesLapCounterVolume OnCarFinishesLap;
 
     // --------------------------------------------------------------
@@ -27,7 +27,7 @@ public class LapCounter : MonoBehaviour
             try
             {
                 // Retrieve the player ID (component is attached to the top-most object)
-                OnCarFinishesLap(other.transform.root.GetComponent<PlayerID>().GetPlayerID());
+                OnCarFinishesLap(other.transform.root.GetComponent<PlayerID>().GetPlayerID(), other.transform.root.gameObject);
             }
             catch (System.NullReferenceException e)
             {
