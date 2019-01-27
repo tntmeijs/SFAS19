@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class ResetDetector : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -15,16 +16,28 @@ public class ResetDetector : MonoBehaviour
     [SerializeField]
     private float m_ResetHeight = 2.0f;
 
+    // If this is an AI controller car, set a minimum speed before it is assumed the AI is stuck
+    [SerializeField]
+    private float m_MinimumVelocity = 0.8f;
+
     // --------------------------------------------------------------
 
     // Object that contains the ideal racing line way points
     private Transform m_WaypointContainer = null;
+
+    // Rigidbody attacked to this object
+    private Rigidbody m_Rigidbody = null;
 
     // --------------------------------------------------------------
 
     public void SetWaypointContainer(Transform container)
     {
         m_WaypointContainer = container;
+    }
+
+    private void Awake()
+    {
+        m_Rigidbody = GetComponent<Rigidbody>();
     }
 
     private void Start()
@@ -46,13 +59,16 @@ public class ResetDetector : MonoBehaviour
 
     private bool CarShouldBeReset()
     {
+        // This is an AI controller, the AI is unable to wait on purpose, so assume it got stuck somewhere in the trees or whatever
+        if (GetComponent<AIController>() && (m_Rigidbody.velocity.magnitude >= 0.0f && m_Rigidbody.velocity.magnitude <= m_MinimumVelocity))
+            return true;
+
         // Car is slightly angled towards the ground, assume it is upside-down
-        return Vector3.Dot(transform.up, Vector3.down) > 0.1f;
+        return (Vector3.Dot(transform.up, Vector3.down) > 0.0f);
     }
 
     private void ResetVehicle()
     {
-        // Find the closest node in the way point system
         AIController aiController = GetComponent<AIController>();
 
         if (!aiController)
@@ -77,7 +93,7 @@ public class ResetDetector : MonoBehaviour
                 }
             }
 
-            // Place the car back on track (sligtly in the air to avoid clipping through the ground)
+            // Place the car back on track (slightly in the air to avoid clipping through the ground)
             transform.position = m_WaypointContainer.GetChild(closestNodeIndex).position + (Vector3.up * m_ResetHeight);
         }
         else
