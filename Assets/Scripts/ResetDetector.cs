@@ -59,6 +59,15 @@ public class ResetDetector : MonoBehaviour
 
     private bool CarShouldBeReset()
     {
+        // The reason we do not cache this AIController reference is because when a player finishes, the player controller
+        // component is switched by an ai controller component. When caching the AI controller component, you only update it
+        // in Awake, which will result in a false-positive in that case.
+        //
+        // I could have created a getting / setter and do it like that, but I am short on time. When I have time, I will
+        // implement that instead.
+        // 
+        // TODO: See comment above for optimization!
+        // 
         // This is an AI controller, the AI is unable to wait on purpose, so assume it got stuck somewhere in the trees or whatever
         if (GetComponent<AIController>() && (m_Rigidbody.velocity.magnitude >= 0.0f && m_Rigidbody.velocity.magnitude <= m_MinimumVelocity))
             return true;
