@@ -26,6 +26,10 @@ public class LapTracker : MonoBehaviour
     [SerializeField]
     private float m_ScoreboardShowTimeout = 3.0f;
 
+    // Show the scoreboard for this many seconds before cutting to the main menu
+    [SerializeField]
+    private float m_ReturnToMainMenuTimeout = 5.0f;
+
     // Name of the animation trigger that starts the fade-out to the scoreboard scene
     [SerializeField]
     private string m_FadeOutAnimationTrigger = "StartFade";
@@ -42,6 +46,10 @@ public class LapTracker : MonoBehaviour
     // Text that holds the lap information UI for player one to four
     [SerializeField]
     private Text[] m_PlayerLapCounters = new Text[Global.MaximumNumberOfPlayers];
+
+    // Text that will hold the final score
+    [SerializeField]
+    private Text m_FinalScoreText = null;
 
     // --------------------------------------------------------------
 
@@ -68,19 +76,23 @@ public class LapTracker : MonoBehaviour
 
             // Update the scoreboard text
             UpdateLapVisualization((int)playerID);
+
+            // Check if we every racer has finished already
+            CheckIfScoreboardCanBeShown();
         };
     }
 
     private void CheckNullReferences()
     {
         // Check if the reference has been set
-        if (!m_LapCounter           ||
-            !m_PlayerLapCounters[0] ||
-            !m_PlayerLapCounters[1] ||
-            !m_PlayerLapCounters[2] ||
-            !m_PlayerLapCounters[3] ||
-            !m_WaypointContainer    ||
-            !m_FadeOutLapInfoCanvasAnimator)
+        if (!m_LapCounter                   ||
+            !m_PlayerLapCounters[0]         ||
+            !m_PlayerLapCounters[1]         ||
+            !m_PlayerLapCounters[2]         ||
+            !m_PlayerLapCounters[3]         ||
+            !m_WaypointContainer            ||
+            !m_FadeOutLapInfoCanvasAnimator ||
+            !m_FinalScoreText)
             Debug.LogError("Error: not all references have been set correctly.");
     }
 
@@ -95,7 +107,7 @@ public class LapTracker : MonoBehaviour
     private void UpdateLapVisualization(int playerIndex)
     {
         // Player finished all laps already
-        if (m_LapsCompleted[playerIndex] == m_LapsToWin)
+        if (m_LapsCompleted[playerIndex] >= m_LapsToWin)
         {
             // Find which place this player managed to finish at
             int place = m_FinishedPlayers.IndexOf(playerIndex);
@@ -104,7 +116,7 @@ public class LapTracker : MonoBehaviour
             if (place == -1)
                 return;
 
-            m_PlayerLapCounters[playerIndex].text = "Player " + playerIndex + " placed #" + (place + 1) + "/" + Global.MaximumNumberOfPlayers;
+            m_PlayerLapCounters[playerIndex].text = "Player " + (playerIndex + 1) + " - FINISHED";
             m_PlayerLapCounters[playerIndex].color = m_WinTextColor;
         }
         else
@@ -130,10 +142,41 @@ public class LapTracker : MonoBehaviour
 
         // Save the player in the scoreboard
         m_FinishedPlayers.Add(id);
+    }
 
+    private void CheckIfScoreboardCanBeShown()
+    {
         // Move on to the final scoreboard once the last player finishes
         if (m_FinishedPlayers.Count == Global.MaximumNumberOfPlayers)
+        {
+            // Set the scoreboard text
+            for (int place = 0; place < m_FinishedPlayers.Count; ++place)
+            {
+                switch (place)
+                {
+                    case 0:
+                        m_FinalScoreText.text = "Player " + (m_FinishedPlayers[place] + 1) + " came in first!";
+                        break;
+
+                    case 1:
+                        m_FinalScoreText.text += "\nPlayer " + (m_FinishedPlayers[place] + 1) + " came in second.";
+                        break;
+
+                    case 2:
+                        m_FinalScoreText.text += "\nPlayer " + (m_FinishedPlayers[place] + 1) + " came in third.";
+                        break;
+
+                    case 3:
+                        m_FinalScoreText.text += "\nPlayer " + (m_FinishedPlayers[place] + 1) + " came in last... :(";
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
             StartCoroutine(ViewScoreboard());
+        }
     }
 
     private IEnumerator ViewScoreboard()
@@ -143,16 +186,15 @@ public class LapTracker : MonoBehaviour
         // Start the animation to make everything black
         m_FadeOutLapInfoCanvasAnimator.SetTrigger(m_FadeOutAnimationTrigger);
 
-        // Do the actual scoreboard scene loading
-        StartCoroutine(LoadScoreboard());
+        // Prepare to go to the main menu again
+        StartCoroutine(LoadMainMenu());
     }
 
-    private IEnumerator LoadScoreboard()
+    private IEnumerator LoadMainMenu()
     {
-        // Wait until the fade animation has finished fading out before switching to the scoreboard scene
-        yield return new WaitForSeconds(m_FadeOutLapInfoCanvasAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length);
+        yield return new WaitForSeconds(m_ReturnToMainMenuTimeout);
 
-        // The scoreboard is the next scene in the build order
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        // Go to the main menu (assume it is always the first scene in the build order)
+        SceneManager.LoadScene(0);
     }
 }
