@@ -126,6 +126,9 @@ public class CarSpawner : MonoBehaviour
             // Spawn the car
             GameObject car = Instantiate(m_PlayerCars[playerIndex], m_SpawnPoints[playerIndex].position, m_SpawnPoints[playerIndex].rotation);
 
+            // Make the car aware of the ideal racing line, both player as well as AI will need it to have their state reset in case they wander off the tracks
+            car.GetComponent<ResetDetector>().SetWaypointContainer(m_WaypointContainer);
+
             // Easy to remember name, nothing important, but it keeps the scene hierarchy looking nice
             car.name = m_CarNamePrefix + (playerIndex + 1);
 
