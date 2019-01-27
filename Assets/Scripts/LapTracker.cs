@@ -28,11 +28,19 @@ public class LapTracker : MonoBehaviour
 
     // Show the scoreboard for this many seconds before cutting to the main menu
     [SerializeField]
-    private float m_ReturnToMainMenuTimeout = 5.0f;
+    private float m_ReturnToMainMenuTimeout = 10.0f;
+
+    [SerializeField]
+    // Delay before the main menu fade-out will be started
+    private float m_MainMenuFadeOutDelay = 7.0f;
 
     // Name of the animation trigger that starts the fade-out to the scoreboard scene
     [SerializeField]
     private string m_FadeOutAnimationTrigger = "StartFade";
+
+    // Name of the animation trigger that starts the fade-out to the main menu scene
+    [SerializeField]
+    private string m_MainMenuFadeOutTrigger = "MainMenuFade";
 
     [Header("References")]
     // Way point container holding the ideal racing line
@@ -188,6 +196,16 @@ public class LapTracker : MonoBehaviour
 
         // Prepare to go to the main menu again
         StartCoroutine(LoadMainMenu());
+
+        // Start the fade-out to the main menu
+        StartCoroutine(StartMainMenuFadeWithDelay());
+    }
+
+    private IEnumerator StartMainMenuFadeWithDelay()
+    {
+        yield return new WaitForSeconds(m_MainMenuFadeOutDelay);
+
+        m_FadeOutLapInfoCanvasAnimator.SetTrigger(m_MainMenuFadeOutTrigger);
     }
 
     private IEnumerator LoadMainMenu()
