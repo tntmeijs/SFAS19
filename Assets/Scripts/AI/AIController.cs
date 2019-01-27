@@ -51,6 +51,12 @@ public class AIController : MonoBehaviour
     // Object that contains the ideal racing line way points
     private Transform m_WaypointContainer = null;
 
+    // Current node of the waypoint system
+    private Transform m_ThisNode = null;
+
+    // Used when a way point is a child of an existing way point (nested track)
+    private Transform m_NestedThisNode = null;
+
     // Script that allows the car to drive
     private CarSuspension m_CarSuspension = null;
 
@@ -81,6 +87,16 @@ public class AIController : MonoBehaviour
         m_IsAlive = false;
     }
 
+    public Transform GetCurrentWaypoint()
+    {
+        // If the car is on a nested track, return that
+        if (m_NestedThisNode)
+            return m_NestedThisNode;
+
+        // Car is not a nested track, return the regular track way point node
+        return m_ThisNode;
+    }
+
     // --------------------------------------------------------------
 
     private void Awake()
@@ -103,16 +119,13 @@ public class AIController : MonoBehaviour
             return;
         }
 
-        // Current node of the waypoint system
-        Transform thisNode = m_WaypointContainer.GetChild(m_MainTrackWaypointIndex);
-
-        // Used when a way point is a child of an existing way point (nested track)
-        Transform nestedThisNode = null;
+        // Current way point node
+        m_ThisNode = m_WaypointContainer.GetChild(m_MainTrackWaypointIndex);
 
         // By default, use the current node as the target to steer towards
-        Vector3 targetPosition = thisNode.position;
+        Vector3 targetPosition = m_ThisNode.position;
 
-        if (thisNode.gameObject.CompareTag(m_TrackSplitTag))
+        if (m_ThisNode.gameObject.CompareTag(m_TrackSplitTag))
         {
             // Randomly decide left of right
             if (m_SplitChoice == (int)TrackSplitOptions.Invalid)
@@ -120,27 +133,27 @@ public class AIController : MonoBehaviour
             
             // m_SplitChoice == 0 --> left
             // m_SplitChoice == 1 --> right
-            nestedThisNode = thisNode.GetChild(m_SplitChoice);
+            m_NestedThisNode = m_ThisNode.GetChild(m_SplitChoice);
 
             // Use a new target (child of the child node)
-            targetPosition = nestedThisNode.GetChild(m_NestedTrackWaypointIndex).position;
+            targetPosition = m_NestedThisNode.GetChild(m_NestedTrackWaypointIndex).position;
 
             // Move on to the next way point once the car gets close
-            UpdateNestedTrackWayPoint(targetPosition, nestedThisNode);
+            UpdateNestedTrackWayPoint(targetPosition, m_NestedThisNode);
         }
-        else if (thisNode.gameObject.CompareTag(m_PitSplitTag))
+        else if (m_ThisNode.gameObject.CompareTag(m_PitSplitTag))
         {
             // Enter the pit lane if the health value falls below the acceptable amount
             if (m_Health.GetCurrentHealthValue() < m_Health.GetMaximumHealthValue() * m_PitLaneHealthThreshold)
             {
                 // First child node of the sub-track container node
-                nestedThisNode = thisNode.GetChild(m_NestedTrackWaypointIndex);
+                m_NestedThisNode = m_ThisNode.GetChild(m_NestedTrackWaypointIndex);
 
                 // Use a new target
-                targetPosition = nestedThisNode.position;
+                targetPosition = m_NestedThisNode.position;
 
                 // Move on to the next way point once the car gets close
-                UpdateNestedTrackWayPoint(targetPosition, thisNode);
+                UpdateNestedTrackWayPoint(targetPosition, m_ThisNode);
             }
             else
             {
@@ -153,6 +166,7 @@ public class AIController : MonoBehaviour
             // No longer in a nested track, reset the values
             m_SplitChoice = (int)TrackSplitOptions.Invalid;
             m_NestedTrackWaypointIndex = 0;
+            m_NestedThisNode = null;
 
             // Regular track following
             if (Vector3.Distance(transform.position, targetPosition) < m_NextWaypointSelectionDistance)

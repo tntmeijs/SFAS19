@@ -6,7 +6,9 @@ public class PlayerID : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    // Player ID of the parent game-object
+    [Header("Configuration")]
+    // Player ID of the game-object
+    [SerializeField]
     private Global.Player m_PlayerID;
 
     // --------------------------------------------------------------
